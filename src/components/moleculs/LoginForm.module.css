@@ -1,0 +1,16 @@
+.form-wrapper {
+  width: 100%;
+  max-width: 350px;
+  margin-inline: auto;
+  margin-top: 50px;
+  backdrop-filter: blur(2px);
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  border: 1px solid #baade7;
+  box-shadow: 0 8px 10px -5px #baade7;
+}
+
+.button {
+  border: 1px solid whitesmoke;
+}
