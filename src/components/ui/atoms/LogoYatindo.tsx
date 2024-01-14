@@ -1,5 +1,5 @@
 import * as Mantine from "@mantine/core"
-import { LOGO_YATINDO } from "../../assets/image/Logo_Yatindo_IMAGE"
+import { LOGO_YATINDO } from "../../../assets/image/Logo_Yatindo_IMAGE"
 import classes from "./LogoYatindo.module.css"
 
 const LogoYatindo = () => {

@@ -17,7 +17,7 @@ export const ContentNonATK = () => {
     const [opened, { close, open }] = useDisclosure()
     const dispatch = useAppDispatch()
     const openedModalEdit = useAppSelector(state => state.modal.openedEditModal)
-    const openedModalDelete = useAppSelector(state => state.modal.openedDeleteModal)
+    // const openedModalDelete = useAppSelector(state => state.modal.openedDeleteModal)
 
     const form = usePermintaanBarangFormContext()
 

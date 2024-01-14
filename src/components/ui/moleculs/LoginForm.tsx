@@ -1,7 +1,7 @@
 import * as Mantine from "@mantine/core"
 import { isNotEmpty, useForm } from "@mantine/form"
 import { useNavigate } from "react-router-dom"
-import { FormValuesLogin } from "../../types/form"
+import { FormValuesLogin } from "../../../types/form"
 import classes from "./LoginForm.module.css"
 
 const LoginForm = () => {

@@ -1,6 +1,6 @@
 import * as Mantine from "@mantine/core"
-import LoginLeftSide from "../../components/moleculs/LoginLeftSide"
-import LoginRightSide from "../../components/moleculs/LoginRightSide"
+import LoginLeftSide from "../../components/ui/moleculs/LoginLeftSide"
+import LoginRightSide from "../../components/ui/moleculs/LoginRightSide"
 
 const Login = () => {
   return (

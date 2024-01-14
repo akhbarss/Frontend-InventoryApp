@@ -127,13 +127,9 @@ export const columnsBarangTidakHabisPakai = () => {
                 const {
                     id,
                     jumlah_barang,
-                    jumlah_keluar,
                     nama_barang,
                     nama_peminjam,
                     ruang_peminjaman,
-                    sisa_barang,
-                    tanggal_keluar,
-                    tanggal_masuk,
                 } = row.original
                 return (
                     <ActionButtonColTable

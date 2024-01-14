@@ -4,10 +4,10 @@ import classes from "./Header.module.css";
 
 interface THeader {
     opened: boolean;
-    close: () => void
+    toggle: () => void
 }
 
-const Header = ({ opened, close }: THeader) => {
+const Header = ({ opened, toggle }: THeader) => {
     const label = useAppSelector(state => state.label.label)
 
     return (
@@ -18,7 +18,7 @@ const Header = ({ opened, close }: THeader) => {
                     color="white"
                     hiddenFrom="sm"
                     opened={opened}
-                    onClick={close}
+                    onClick={toggle}
                 />
                 <Group>
                     <Text>Halo, Admin!</Text>

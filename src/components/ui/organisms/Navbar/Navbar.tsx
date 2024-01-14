@@ -33,9 +33,9 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
         }
     };
 
-    const onLogout = () => {
-        navigate("/auth/login", { replace: true })
-    }
+    // const onLogout = () => {
+    //     navigate("/auth/login", { replace: true })
+    // }
 
     const menus = value === "ADMIN" ? menusAdmin : menusSuperAdmin
 

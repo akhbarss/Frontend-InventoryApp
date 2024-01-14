@@ -7,7 +7,6 @@ import {
 import cx from 'clsx';
 import { useMemo, useState } from "react";
 import classes from "./CustomTable.module.css";
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 
 type CustomTableFC<T> = {
     columns: ColumnDef<T, any>[]
@@ -31,14 +30,8 @@ const CustomTable = <T,>({
     data = [],
     loading,
     totalPage,
-    totalRecords,
-    totalData,
     filterCell,
-    input,
-    useSearchInput,
-    useSearchFilter,
-    exportExcel,
-    useExportExcel,
+    
 }: CustomTableFC<T>) => {
     const [scrolled, setScrolled] = useState(false);
 
