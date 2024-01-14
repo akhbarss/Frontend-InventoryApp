@@ -13,10 +13,7 @@ export const PageLabelSlice = createSlice({
   initialState,
   reducers: {
     setLabel: (state, action: PayloadAction<string>) => {
-      console.log({ state });
-      console.log({ action });
       state.label = action.payload;
-      console.log({ state });
     },
   },
 });

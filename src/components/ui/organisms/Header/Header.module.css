@@ -1,0 +1,35 @@
+.header-wrapper {
+  color: var(--mantine-color-white);
+  padding-inline: 3rem;
+  background-color: #29166F;
+
+  @mixin dark {
+    background-color: #7f73a9;
+  }
+}
+
+.header_inner {
+  margin-top: 20px;
+  justify-content: flex-end;
+
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    justify-content: space-between;
+  }
+}
+
+.label {
+    background-color: white;
+    position: absolute;
+    bottom: -20px;
+    left: 50px;
+    right: 50px;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 0 20px -10px black;
+    padding-inline: 2rem;
+
+    @mixin dark {
+      background-color: var(--mantine-color-dark-9);
+    }
+}

@@ -1,0 +1,31 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0;
+  flex-direction: row;
+  border-radius: 20px;
+  
+
+  @mixin dark {
+    background-color: var(--mantine-color-dark-9);
+  }
+}
+
+.icon_class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  border-start-end-radius: 50px;
+  border-end-end-radius: 50px;
+
+  @mixin dark {
+    color: white;
+  }
+}
+
+.description {
+    flex: 1;
+    padding-right: 1rem;
+}

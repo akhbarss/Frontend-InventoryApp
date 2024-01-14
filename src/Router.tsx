@@ -1,17 +1,25 @@
 import { Suspense } from "react";
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
+
 import Provider from "./Provider";
 import AuthLayout from "./layouts/AuthLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
-import BelumDiProsesPage from "./pages/barang/BelumDiProsesPage";
-import Dashboard from "./pages/Dashboard";
-import DataBarangPage from "./pages/DataBarangPage";
-import Login from "./pages/Login";
-import ManajemenUserPage from "./pages/ManajemenUserPage";
-import TelahDiProsesPage from "./pages/barang/TelahDiProsesPage";
-import HabisPakaiPage from "./pages/barang/HabisPakaiPage";
-import TidakHabisPakaiPage from "./pages/barang/TidakHabisPakaiPage";
-import PermintaanBarang from "./pages/PermintaanBarang";
+import NewLogin from "./pages/auth/NewLogin";
+
+import Dashboard from "./pages/app/admin/DashboardAdmin";
+import DataBarangAdmin from "./pages/app/admin/DataBarangAdmin";
+import PeminjamanBarang from "./pages/app/PeminjamanBarang";
+import HabisPakaiPage from "./pages/app/barang/HabisPakaiPage";
+import TidakHabisPakaiPage from "./pages/app/barang/TidakHabisPakaiPage";
+import ATK from "./pages/app/permintaan-barang/ATK";
+import NonATK from "./pages/app/permintaan-barang/NonATK";
+
+import DashboardSuperAdmin from "./pages/app/superadmin/DashboardSuperAdmin";
+import DataBarangSuperAdmin from "./pages/app/superadmin/DataBarangSuperAdmin";
+import BelumDiProsesPage from "./pages/app/barang/BelumDiProsesPage";
+import TelahDiProsesPage from "./pages/app/barang/TelahDiProsesPage";
+import ManajemenUserPage from "./pages/app/ManajemenUserPage";
+import BarangDiPinjam from "./pages/app/BarangDiPinjam";
 
 export const routes = createBrowserRouter([
     {
@@ -29,7 +37,7 @@ export const routes = createBrowserRouter([
                 children: [
                     {
                         path: "auth/login",
-                        element: <Login />
+                        element: <NewLogin />
                     }
                 ]
             },
@@ -37,17 +45,14 @@ export const routes = createBrowserRouter([
                 element: <DashboardLayout />,
                 children: [
                     {
-                        // admin & superadmin
                         path: "dashboard",
                         element: <Dashboard />
                     },
                     {
-                        // admin & superadmin
                         path: "data-barang",
-                        element: <DataBarangPage />
+                        element: <DataBarangAdmin />
                     },
                     {
-                        // admin
                         path: "barang-keluar-masuk",
                         children: [
                             {
@@ -61,29 +66,61 @@ export const routes = createBrowserRouter([
                         ]
                     },
                     {
-                        // admin
                         path: "permintaan-barang",
-                        element: <PermintaanBarang />
-                    },
-                    {
-                        // superadmin
-                        path: "permintaan-barang-superadmin",
                         children: [
                             {
-                                path: "belum-diproses",
-                                element: <BelumDiProsesPage />
+                                path: "atk",
+                                element: <ATK />
                             },
                             {
-                                path: "telah-diproses",
-                                element: <TelahDiProsesPage />
+                                path: "non-atk",
+                                element: <NonATK />
                             },
                         ]
                     },
                     {
-                        // superadmin
-                        path: "manajemen-user",
-                        element: <ManajemenUserPage />
+                        path: "peminjaman-barang",
+                        element: <PeminjamanBarang />
+                    },
+                    {
+                        path: "superadmin",
+                        children: [
+                            {
+                                path: "dashboard",
+                                element: <DashboardSuperAdmin />
+                            },
+                            {
+                                path: "data-barang",
+                                element: <DataBarangSuperAdmin />
+                            },
+                            {
+                                path: "data-barang",
+                                element: <DataBarangSuperAdmin />
+                            },
+                            {
+                                path: "permintaan-barang",
+                                children: [
+                                    {
+                                        path: "belum-diproses",
+                                        element: <BelumDiProsesPage />
+                                    },
+                                    {
+                                        path: "telah-diproses",
+                                        element: <TelahDiProsesPage />
+                                    },
+                                ]
+                            },
+                            {
+                                path: "manajemen-admin",
+                                element: <ManajemenUserPage />
+                            },
+                            {
+                                path: "barang-dipinjam",
+                                element: <BarangDiPinjam />
+                            },
+                        ]
                     }
+
                 ]
             }
         ]

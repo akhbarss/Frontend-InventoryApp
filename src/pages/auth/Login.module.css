@@ -1,0 +1,49 @@
+.wp-school-left {
+  background-color: #dfdbe5;
+  flex: 1;
+  height: 100vh;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: inset -10px 0 80px -30px black;
+  /* background-image: url("../assets/blob-scene-haikei.svg"); */
+  background-image: url("../assets/blob-scene-haikei1.svg");
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    padding: 2rem;
+  }
+}
+
+.right-side {
+  flex: 2;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  position: relative;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    display: none;
+  }
+}
+
+.right-side::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 100px 20px rgba(0, 0, 0, 0.5);
+}
+
+.greetings {
+  left: 5%;
+  bottom: 18%;
+  color: white;
+  position: absolute;
+}

@@ -1,4 +1,8 @@
-import { MantineColorsTuple, createTheme } from "@mantine/core";
+import {
+  CSSVariablesResolver,
+  MantineColorsTuple,
+  createTheme,
+} from "@mantine/core";
 
 const myColor: MantineColorsTuple = [
   "#f1eefc",
@@ -20,5 +24,21 @@ export const theme = createTheme({
   fontFamily: "Ubuntu, sans-serif",
   primaryColor: "myColor",
   primaryShade: 9,
+  defaultRadius: "md",
+  other: {
+    color: {
+      textColorDark: "var(--mantine-color-dark-9)",
+      textColorLight: "var(--mantine-color-gray-1)",
+    },
+  },
+});
 
+export const resolver: CSSVariablesResolver = (theme) => ({
+  variables: {},
+  light: {
+    "--mantine-color-text": theme.other.textColorDark,
+  },
+  dark: {
+    "--mantine-color-text": theme.other.textColorLight,
+  },
 });

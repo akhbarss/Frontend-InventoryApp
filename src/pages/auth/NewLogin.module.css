@@ -1,0 +1,91 @@
+.root_login {
+  height: 100vh;
+  width: 100%;
+  background-image: url("../../assets/bg-wp-content-login.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  align-items: center;
+}
+
+.overlay {
+  backdrop-filter: brightness(60%);
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+}
+
+.card_login {
+  border-radius: 20px;
+  background-color: #29166f;
+  padding-bottom: 0;
+
+  /* margin-left: clamp(1rem, 4vw, 4rem); */
+  margin-left: 4rem;
+  height: 85vh;
+  box-shadow: 0 0 60px -20px white;
+  height: 32rem;
+  width: 30rem;
+}
+
+.logo {
+  width: clamp(90px, 9vw, 130px) !important;
+}
+
+.text_school {
+  font-size: clamp(20px, 4vw, 28px);
+}
+
+.form_input {
+  padding: 2rem;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+}
+
+.input {
+  background-color: transparent;
+  caret-color: white;
+  border-color: white;
+  /* margin-bottom: 1rem; */
+  color: white;
+}
+
+.visibilityToggle {
+  color: white;
+}
+
+.label_input {
+  color: white;
+}
+
+.wrapper_action {
+  background-color: #272b87;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 7rem;
+  border-start-start-radius: 50px;
+  border-start-end-radius: 50px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.greetings {
+    z-index: 100000;
+    color: white;
+    margin-left: 4rem;
+    align-self: end;
+    margin-bottom: 3.5rem;
+    font-weight: bold;
+}
+
+.greetings_text {
+  font-size: 20px;
+}

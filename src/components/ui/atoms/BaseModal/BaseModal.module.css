@@ -1,0 +1,35 @@
+.modal_content::-webkit-scrollbar {
+  width: 5px; /* Lebar scroll bar */
+}
+
+.modal_content::-webkit-scrollbar-thumb {
+  background-color: #888; /* Warna thumb scroll bar */
+  border-radius: 6px; /* Border radius thumb scroll bar */
+}
+
+.modal_content::-webkit-scrollbar-track {
+  background-color: transparent; /* Warna track scroll bar */
+}
+
+.modal_header {
+  border-bottom: 1px solid var(--mantine-color-gray-4);
+
+  @mixin dark {
+    border-color: var(--mantine-color-dark-5);
+  }
+}
+
+.modal_footer {
+  border-top: 1px solid var(--mantine-color-gray-4);
+  padding-inline: var(--mantine-spacing-lg);
+  background-color: white;
+  justify-content: end;
+  position: sticky;
+  bottom: 0;
+  height: 70px;
+  
+  @mixin dark {
+      border-color: var(--mantine-color-dark-5);
+      background-color: var(--mantine-color-dark-6);
+  }
+}
