@@ -4,7 +4,7 @@ import { ButtonHeaderColumn } from "../../components/ui/atoms/ButtonHeaderColumn
 import { ActionButtonColTable } from "../../components/ui/atoms/Table/ActionButtonColTable/ActionButtonColTable";
 import { useAppDispatch } from "../../store/store";
 import { createColumnHelpers } from "./columns";
-import { useBarangKeluarHabisPakaiFormContext } from "../../components/context/form-context";
+import { useBarangKeluarHabisPakaiFormContext } from "../context/form-context";
 import { setOpenDeleteModal, setOpenEditModal } from "../../store/features/ModalSlice";
 
 export type TBarangHabisPakai = {
@@ -108,6 +108,8 @@ export const columnsBarangHabisPakai = () => {
                 const { id, jumlah_barang, nama_barang, ruang_peminjaman } = row.original
                 return (
                     <ActionButtonColTable
+                        withDelete
+                        withSetting
                         onClickDelete={() => {
                             dispatch(
                                 setOpenDeleteModal(true)

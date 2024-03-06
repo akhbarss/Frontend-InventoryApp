@@ -1,17 +1,14 @@
 .logo-yatindo {
-  width: clamp(90px, 20vw, 120px);
-  filter: drop-shadow(1px 5px 2px black);
+  width: clamp(140px, 20vw, 120px);
+  /* filter: drop-shadow(1px 5px 2px black); */
 }
 
 .divider-vertical {
-  color: white;
-  background-color: white;
-  box-shadow: 1px 0 5px 0px black;
+  border-color: light-dark(black, var(--mantine-color-gray-7));
 }
 
 .title-app {
-  color: white;
+  /* color: black; */
   font-weight: bold;
-  font-size: clamp(20px , 4vw, 28px);
-  text-shadow: 0 0 6px black;
+  font-size: clamp(20px, 4vw, 28px);
 }

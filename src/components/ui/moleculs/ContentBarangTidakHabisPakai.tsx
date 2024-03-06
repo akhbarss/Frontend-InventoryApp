@@ -3,17 +3,17 @@ import { useDisclosure } from '@mantine/hooks'
 
 import { useAppDispatch, useAppSelector } from '../../../store/store'
 import { columnsBarangTidakHabisPakai } from '../../../utils/columns/barang-tidak-habis-pakai'
-import { useBarangKeluarTidakHabisPakaiFormContext } from '../../context/form-context'
+import { useBarangKeluarTidakHabisPakaiFormContext } from '../../../utils/context/form-context'
 
 import { BaseModal } from '../atoms/BaseModal/BaseModal'
 import ActionButtonBarangKeluar from '../atoms/ButtonBarangKeluar/ButtonBarangKeluar'
-import ButtonExport from '../atoms/ButtonExport'
+import { ButtonExport }from '../atoms/ButtonExport/ButtonExport'
 import { FormTambahBarangKeluarTidakHabisPakai } from '../atoms/Form/FormTambahBarangKeluarTidakHabisPakai/FormTambahBarangKeluarTidakHabisPakai'
-import PageContent from '../atoms/PageContent'
+import { PageContent } from '../atoms/PageContent'
 import Pagination from '../atoms/Pagination'
 import CustomTable from '../atoms/Table/CustomTable'
 import { setOpenDeleteModal, setOpenEditModal } from '../../../store/features/ModalSlice'
-import { ModalDeleteBarang } from '../atoms/Modal/ModalDeleteBarang/ModalDeleteBaranng'
+import { ModalDelete } from '../atoms/Modal/ModalDelete/ModalDelete'
 
 const ContentBarangTidakHabisPakai = () => {
     const dispatch = useAppDispatch()
@@ -89,7 +89,7 @@ const ContentBarangTidakHabisPakai = () => {
                 <FormTambahBarangKeluarTidakHabisPakai />
             </BaseModal>
 
-            <ModalDeleteBarang
+            <ModalDelete
                 opened={openedDeleteModal}
                 onAccept={() => { }}
                 onClose={() => {

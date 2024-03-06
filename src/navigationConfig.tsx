@@ -33,6 +33,7 @@ export const menusAdmin: TMenusNavigations[] = [
         getItem("ATK", "/permintaan-barang/atk"),
         getItem("Non ATK", "/permintaan-barang/non-atk"),
     ]),
+    getItem("Manajemen Barang", "/manajemen-barang", ),
     // getItem("Permintaan Barang", undefined, <FaRoad />, [
     //     getItem("Belum di Proses", '/permintaan-barang-superadmin/belum-diproses'),
     //     getItem("Telah di Proses", '/permintaan-barang-superadmin/telah-diproses'),

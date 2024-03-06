@@ -8,6 +8,10 @@
 
   display: flex;
   align-items: center;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    justify-content: center;
+  }
 }
 
 .overlay {
@@ -21,13 +25,16 @@
   border-radius: 20px;
   background-color: #29166f;
   padding-bottom: 0;
-
   /* margin-left: clamp(1rem, 4vw, 4rem); */
   margin-left: 4rem;
   height: 85vh;
   box-shadow: 0 0 60px -20px white;
   height: 32rem;
   width: 30rem;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    margin: 2rem;
+  }
 }
 
 .logo {
@@ -76,14 +83,16 @@
   align-items: center;
 }
 
-
 .greetings {
-    z-index: 100000;
-    color: white;
-    margin-left: 4rem;
-    align-self: end;
-    margin-bottom: 3.5rem;
-    font-weight: bold;
+  z-index: 100000;
+  color: white;
+  margin-top: 25rem;
+  margin-left: 4rem;
+  font-weight: bold;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    display: none;
+  }
 }
 
 .greetings_text {

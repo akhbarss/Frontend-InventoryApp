@@ -1,14 +1,14 @@
 import { Group } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { TPermintaanBarang, columnsPermintaanBarang } from "../../../../utils/columns/permintaan-barang"
-import ButtonExport from "../../atoms/ButtonExport"
+import { ButtonExport }from "../../atoms/ButtonExport/ButtonExport"
 import { ButtonPlus } from "../../atoms/ButtonPlus/ButtonPlus"
-import PageContent from "../../atoms/PageContent"
+import { PageContent } from "../../atoms/PageContent"
 import CustomTable from "../../atoms/Table/CustomTable"
 import { BaseModal } from "../../atoms/BaseModal/BaseModal"
 import { FormPermintaanBarang } from "../../atoms/Form/FormPermintaanBarang/FormPermintaanBarang"
 import { useAppDispatch, useAppSelector } from "../../../../store/store"
-import { usePermintaanBarangFormContext } from "../../../context/form-context"
+import { usePermintaanBarangFormContext } from "../../../../utils/context/form-context"
 import { setOpenEditModal } from "../../../../store/features/ModalSlice"
 
 
@@ -58,7 +58,7 @@ export const ContentNonATK = () => {
 
             <BaseModal
                 onSubmit={() => { }}
-                size={"lg"}
+                size={"md"}
                 title="Tambah Permintaan"
                 opened={opened}
                 onClose={() => {
@@ -72,7 +72,7 @@ export const ContentNonATK = () => {
             {/* MOdal Edit */}
             <BaseModal
                 onSubmit={() => { }}
-                size={"lg"}
+                size={"md"}
                 title="Edit Permintaan"
                 opened={openedModalEdit}
                 onClose={() => {

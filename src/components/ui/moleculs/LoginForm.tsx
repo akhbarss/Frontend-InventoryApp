@@ -1,70 +1,89 @@
-import * as Mantine from "@mantine/core"
-import { isNotEmpty, useForm } from "@mantine/form"
-import { useNavigate } from "react-router-dom"
-import { FormValuesLogin } from "../../../types/form"
-import classes from "./LoginForm.module.css"
+import * as Mantine from "@mantine/core";
+import { isNotEmpty, useForm } from "@mantine/form";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../../utils/api/auth";
+import { FormValuesLogin } from "../../../utils/types/form";
+import { showNotifications } from "../../../utils/showNotifications";
+import classes from "./LoginForm.module.css";
 
 const LoginForm = () => {
-    const navigate = useNavigate()
-    const loginForm = useForm<FormValuesLogin>({
-        initialValues: {
-            username: "",
-            password: ""
-        },
-        validate: {
-            username: isNotEmpty("Harap isi username anda!"),
-            password: isNotEmpty("Harap isi password anda!"),
-        }
-    })
+  const navigate = useNavigate();
 
-    type DataFormLogin = typeof loginForm.values
+  const loginForm = useForm<FormValuesLogin>({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validate: {
+      username: isNotEmpty("Harap isi username anda!"),
+      password: isNotEmpty("Harap isi password anda!"),
+    },
+  });
+  type DataFormLogin = typeof loginForm.values;
 
-    const onSubmit = (e: DataFormLogin) => {
-        console.log({ e })
-        navigate("/dashboard")
-    }
+  const loginMutation = useMutation({
+    mutationFn: login,
+  });
+  const loading = loginMutation.status == "pending";
 
-    return (
-        <form
-            onSubmit={loginForm.onSubmit(onSubmit)}
-            className={classes['form-wrapper']}
+  const onSubmit = (payload: DataFormLogin) => {
+    loginMutation.mutate(payload, {
+      onSuccess: () => {
+        showNotifications({
+          message: "Welcome to Inventory App!",
+          title: "Login Success!",
+          type: "success",
+        });
+        navigate("/dashboard");
+      },
+      onError: (err) => {
+        console.log("login failed : ", err);
+      },
+    });
+  };
+
+  return (
+    <form
+      onSubmit={loginForm.onSubmit(onSubmit)}
+      className={classes["form-wrapper"]}
+    >
+      <Mantine.Stack gap={"md"}>
+        <Mantine.TextInput
+          disabled={loading}
+          autoFocus={true}
+          size="md"
+          label="Username"
+          styles={{
+            label: { fontWeight: "bold" },
+            error: { color: "#ffa29c", fontWeight: "bold" },
+          }}
+          {...loginForm.getInputProps("username")}
+        />
+
+        <Mantine.PasswordInput
+          disabled={loading}
+          size="md"
+          label="Password"
+          styles={{
+            label: { fontWeight: "bold" },
+            error: { color: "#ffa29c", fontWeight: "bold" },
+          }}
+          {...loginForm.getInputProps("password")}
+        />
+
+        <Mantine.Button
+          mt={40}
+          size="md"
+          fullWidth
+          type="submit"
+          loading={loading}
         >
-            <Mantine.Stack>
-                <Mantine.TextInput
-                    size="md"
-                    label="Username"
-                    styles={{
-                        label: { fontWeight: "bold", color: "white" },
-                        error: { color: "#ffa29c", fontWeight: "bold" }
-                    }}
-                    {...loginForm.getInputProps("username")}
-                />
-                <Mantine.PasswordInput
-                    size="md"
-                    label="Password"
-                    styles={{
-                        label: { fontWeight: "bold", color: "white" },
-                        error: { color: "#ffa29c", fontWeight: "bold" }
-                    }}
-                    {...loginForm.getInputProps("password")}
-                />
-                <Mantine.Group justify="flex-end">
-                    <Mantine.Button
-                        w={150}
-                        size="md"
-                        radius={"lg"}
-                        type="submit"
-                        className={classes.button}
-                    >
-                        Login
-                    </Mantine.Button>
-                </Mantine.Group>
-            </Mantine.Stack>
-            <Mantine.Text mt={20} ta={"center"} fw={"bold"} c={"white"}>
-                Copyright by D-Coders
-            </Mantine.Text>
-        </form>
-    )
-}
+          Login
+        </Mantine.Button>
+      </Mantine.Stack>
+    </form>
+  );
+};
 
-export default LoginForm
+export default LoginForm;

@@ -9,23 +9,23 @@
 }
 
 .header_inner {
-  margin-top: 20px;
-  justify-content: flex-end;
+  max-width: 70rem;
+  margin-inline: auto;
+}
 
+.burger {
+  margin-top: 10px;
 
-  @media (max-width: $mantine-breakpoint-sm) {
-    justify-content: space-between;
+  @media (min-width: $mantine-breakpoint-sm) {
+    opacity: 0;;
   }
 }
 
 .label {
     background-color: white;
-    position: absolute;
-    bottom: -20px;
-    left: 50px;
-    right: 50px;
     border-radius: 10px;
-    padding: 12px;
+    padding: 13px;
+    margin-top: 10px;
     box-shadow: 0 0 20px -10px black;
     padding-inline: 2rem;
 

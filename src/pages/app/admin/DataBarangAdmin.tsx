@@ -1,5 +1,8 @@
 import { isNotEmpty } from "@mantine/form";
-import { DataBarangFormProvider, useDataBarangForm } from "../../../components/context/form-context";
+import {
+  DataBarangFormProvider,
+  useDataBarangForm,
+} from "../../../utils/context/form-context";
 import PageLabel from "../../../components/ui/atoms/PageLabel";
 import ContentDataBarang from "../../../components/ui/moleculs/DataBarang/ContentDataBarangAdmin";
 
@@ -7,19 +10,21 @@ const DataBarangAdmin = () => {
   const form = useDataBarangForm({
     initialValues: {
       id: null,
-      barang: '',
+      nama_barang: "",
+      lokasi: "",
       jumlah: null,
-      keterangan: "",
-      kodeBarang: '',
-      lokasi: ''
+      kategori: "",
+      kode_barang: "",
+      kondisi: "",
     },
     validate: {
-      barang: isNotEmpty(""),
-      jumlah: isNotEmpty(""),
-      keterangan: isNotEmpty(""),
-      kodeBarang: isNotEmpty(""),
+      nama_barang: isNotEmpty(""),
       lokasi: isNotEmpty(""),
-    }
+      jumlah: isNotEmpty(""),
+      kategori: isNotEmpty(""),
+      kode_barang: isNotEmpty(""),
+      kondisi: isNotEmpty(""),
+    },
   });
   return (
     <>
@@ -28,7 +33,7 @@ const DataBarangAdmin = () => {
         <ContentDataBarang />
       </DataBarangFormProvider>
     </>
-  )
-}
+  );
+};
 
-export default DataBarangAdmin
+export default DataBarangAdmin;

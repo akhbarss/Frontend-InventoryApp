@@ -1,121 +1,107 @@
-import { useDisclosure } from "@mantine/hooks"
-import { notifications } from "@mantine/notifications"
-
-import { setLoading } from "../../../../store/features/LoadingSlice"
-import { setOpenDeleteModal, setOpenEditModal } from "../../../../store/features/ModalSlice"
-import { useAppDispatch, useAppSelector } from "../../../../store/store"
-
-import { TDataBarang, columnsDataBarangAdmin } from "../../../../utils/columns/data-barang"
-import { useDataBarangFormContext } from "../../../context/form-context"
-
-import { BaseModal } from "../../atoms/BaseModal/BaseModal"
-import { FormDataBarang } from "../../atoms/Form/FormDataBarang"
-import { ModalDeleteBarang } from "../../atoms/Modal/ModalDeleteBarang/ModalDeleteBaranng"
-import PageContent from "../../atoms/PageContent"
-import Pagination from "../../atoms/Pagination"
-import CustomTable from "../../atoms/Table/CustomTable"
-import { HeadDataBarang } from "./HeadDataBarangAdmin"
+import {
+  setOpenCreateModal,
+  setOpenDeleteModal,
+  setOpenEditModal,
+} from "../../../../store/features/ModalSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import { TDataBarang, columnsDataBarangAdmin } from "../../../../utils/columns/data-barang";
+import { useDataBarangFormContext } from "../../../../utils/context/form-context";
+import {
+  useActionBarang,
+  dataBarangAdmin,
+} from "../../../../utils/actions/actionsDataBarang";
+import { PageContent } from "../../atoms";
+import { BaseModal } from "../../atoms/BaseModal/BaseModal";
+import { FormDataBarang } from "../../atoms/Form/FormDataBarang";
+import { ModalDelete } from "../../atoms/Modal/ModalDelete/ModalDelete";
+import Pagination from "../../atoms/Pagination";
+import CustomTable from "../../atoms/Table/CustomTable";
+import { HeadDataBarang } from "./HeadDataBarangAdmin";
+import { useState } from "react";
 
 const ContentDataBarang = () => {
-    const [openedCreateModal, { close, open }] = useDisclosure()
+  const dispatch = useAppDispatch();
+  const form = useDataBarangFormContext();
+  const [data, setData] = useState<TDataBarang[]>(dataBarangAdmin)
 
-    const form = useDataBarangFormContext();
+  const openedCreateModal = useAppSelector(
+    (state) => state.modal.openedCreateModal
+  );
+  const openedEditModal = useAppSelector(
+    (state) => state.modal.openedEditModal
+  );
+  const openedDeleteModal = useAppSelector(
+    (state) => state.modal.openedDeleteModal
+  );
 
-    const dispatch = useAppDispatch()
-    const openedEditModal = useAppSelector(state => state.modal.openedEditModal)
-    const openedDeleteModal = useAppSelector(state => state.modal.openedDeleteModal)
+  const modals = (
+    <>
+      {/* Modal Create */}
+      <BaseModal
+        size={"md"}
+        opened={openedCreateModal}
+        onClose={() => {
+          dispatch(setOpenCreateModal(false));
+          form.reset();
+        }}
+        title="Tambah Barang"
+        onSubmit={form.onSubmit(() => {
+          useActionBarang().tambahBarang
+        })}
+      >
+        <FormDataBarang />
+      </BaseModal>
 
-    const data: TDataBarang[] = []
-    for (let index = 1; index < 20; index++) {
-        data.push({
-            id: index,
-            jumlah: index + 100,
-            keterangan: "bagus",
-            kode_barang: "039jd20dehdibi" + index,
-            lokasi: "LAB " + index,
-            nama_barang: "ROuter" + index
-        })
-    }
+      {/* Modal Edit */}
+      <BaseModal
+        size={"md"}
+        opened={openedEditModal}
+        onClose={() => {
+          dispatch(setOpenEditModal(false));
+          form.reset();
+        }}
+        title="Edit Barang"
+        onSubmit={form.onSubmit(useActionBarang().editBarang)}
+      >
+        <FormDataBarang />
+      </BaseModal>
 
-    const onClickTambahBarang = () => open()
+      {/* Modal Delete */}
+      <ModalDelete
+        opened={openedDeleteModal}
+        message={`Anda yakin ingin menghapus barang ${form.values.nama_barang}`}
+        onAccept={() => {
+          dataBarangAdmin.map((item) => {
+            return item.id !== form.values.id;
+          });
+          dispatch(setOpenDeleteModal(false));
+        }}
+        onClose={() => {
+          dispatch(setOpenDeleteModal(false));
+          form.reset();
+        }}
+      />
+    </>
+  );
 
-    const onSubmitTambahBarang = () => {
-        dispatch(setLoading(true))
-        setTimeout(() => {
-            dispatch(setLoading(false))
-            close()
-            notifications.show({
-                message: "success", color: "green"
-            })
-        }, 5000);
-    }
+  return (
+    <PageContent>
+      <HeadDataBarang />
 
-    const onSubmitEditBarang = () => {
-        dispatch(setLoading(true))
-        setTimeout(() => {
-            dispatch(setLoading(false))
-            dispatch(setOpenEditModal(false))
-            notifications.show({
-                message: "success", color: "green"
-            })
-        }, 5000);
+      <CustomTable
+        loading={false}
+        totalData={100}
+        totalPage={10}
+        totalRecords={10}
+        columns={columnsDataBarangAdmin()}
+        data={dataBarangAdmin}
+      />
 
-    }
+      <Pagination />
 
-    return (
-        <PageContent>
-            <HeadDataBarang onClickTambahBarang={onClickTambahBarang} />
-            <CustomTable
-                loading={false}
-                totalData={100}
-                totalPage={10}
-                totalRecords={10}
-                columns={columnsDataBarangAdmin()}
-                data={data}
-            />
-            <Pagination />
+      {modals}
+    </PageContent>
+  );
+};
 
-            {/* Modal Create */}
-            <BaseModal
-                size={"md"}
-                opened={openedCreateModal}
-                onClose={() => {
-                    close()
-                    form.reset()
-                }}
-                title="Tambah Barang"
-                onSubmit={form.onSubmit(onSubmitTambahBarang)}
-            >
-                <FormDataBarang />
-            </BaseModal>
-
-            {/* Modal Edit */}
-            <BaseModal
-                size={"md"}
-                opened={openedEditModal}
-                onClose={() => {
-                    dispatch(setOpenEditModal(false))
-                    form.reset()
-                }}
-                title="Edit Barang"
-                onSubmit={form.onSubmit(onSubmitEditBarang)}
-            >
-                <FormDataBarang />
-            </BaseModal>
-
-            <ModalDeleteBarang
-                opened={openedDeleteModal}
-                onAccept={() => {
-                    console.log("accept")
-                    dispatch(setOpenDeleteModal(false))
-                }}
-                onClose={() => {
-                    dispatch(setOpenDeleteModal(false))
-                    form.reset()
-                }}
-            />
-        </PageContent>
-    )
-}
-
-export default ContentDataBarang
+export default ContentDataBarang;

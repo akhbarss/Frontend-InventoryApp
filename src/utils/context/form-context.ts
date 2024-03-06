@@ -1,12 +1,13 @@
 import { createFormContext } from "@mantine/form";
 
-interface DataBarangFormValues {
+type DataBarangFormValues =  {
   id: number | null;
-  barang: string;
-  kodeBarang: string;
+  nama_barang: string;
   lokasi: string;
   jumlah: number | null;
-  keterangan: string;
+  kode_barang: string;
+  kategori: string;
+  kondisi: string;
 }
 export const [
   DataBarangFormProvider,
@@ -56,3 +57,44 @@ export const [
   usePermintaanBarangFormContext,
   usePermintaanBarangForm,
 ] = createFormContext<PermintaanBarangFormValues>();
+
+interface PeminjamanBarangFormValues {
+  id: number | null;
+  nama_peminjam: string;
+  nama_barang: string;
+  jumlah_barang: number | null;
+  kelas: string;
+  notelp: string;
+  keterangan: string;
+}
+export const [
+  PeminjamanBarangFormProvider,
+  usePeminjamanBarangFormContext,
+  usePeminjamanBarangForm,
+] = createFormContext<PeminjamanBarangFormValues>();
+
+// interface BelumDiProsesFormValues {
+//   id: number | null;
+//   nama_barang: string;
+//   jumlah: number | null;
+//   lokasi: string;
+//   keterangan: string;
+// }
+// export const [
+//   BelumDiProsesFormProvider,
+//   useBelumDiProsesFormContext,
+//   useBelumDiProsesForm,
+// ] = createFormContext<BelumDiProsesFormValues>();
+
+interface ManajemenAdminFormValues {
+  id: number | null;
+  name: string;
+  jurusan: string;
+  username: string;
+  password: string;
+}
+export const [
+  ManajemenAdminFormProvider,
+  useManajemenAdminFormContext,
+  useManajemenAdminForm,
+] = createFormContext<ManajemenAdminFormValues>();

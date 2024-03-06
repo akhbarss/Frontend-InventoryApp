@@ -1,7 +1,17 @@
 .navbar {
-    background-color: #F2F4FF;
+  background-color: white;
 
-    @mixin dark {
-        background-color: var(--mantine-color-dark-9);
-    }
+  @mixin dark {
+    background-color: var(--mantine-color-dark-8);
+  }
+}
+
+.card_profile {
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+}
+
+.card_profile:hover {
+  background-color: light-dark(white, var(--mantine-color-dark-9));
 }

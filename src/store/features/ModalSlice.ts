@@ -1,12 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface TModalSlice {
+  openedCreateModal: boolean;
   openedEditModal: boolean;
   openedDeleteModal: boolean;
   data_id: number | null;
 }
 
 const initialState: TModalSlice = {
+  openedCreateModal: false,
   openedEditModal: false,
   openedDeleteModal: false,
   data_id: null,
@@ -16,6 +18,9 @@ export const ModalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
+    setOpenCreateModal: (state, action: PayloadAction<boolean>) => {
+      state.openedCreateModal = action.payload;
+    },
     setOpenEditModal: (state, action: PayloadAction<boolean>) => {
       state.openedEditModal = action.payload;
     },
@@ -26,4 +31,5 @@ export const ModalSlice = createSlice({
 });
 
 export default ModalSlice.reducer;
-export const { setOpenEditModal, setOpenDeleteModal } = ModalSlice.actions;
+export const { setOpenEditModal, setOpenDeleteModal, setOpenCreateModal } =
+  ModalSlice.actions;

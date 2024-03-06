@@ -6,19 +6,19 @@ import {
 } from "../../../utils/columns/barang-habis-pakai"
 import {
     useBarangKeluarHabisPakaiFormContext
-} from "../../context/form-context"
+} from "../../../utils/context/form-context"
 
 import { setOpenDeleteModal, setOpenEditModal } from "../../../store/features/ModalSlice"
 import { useAppDispatch, useAppSelector } from "../../../store/store"
 import { BaseModal } from "../atoms/BaseModal/BaseModal"
 import ActionButtonBarangKeluar from "../atoms/ButtonBarangKeluar/ButtonBarangKeluar"
-import ButtonExport from "../atoms/ButtonExport"
+import { ButtonExport }from "../atoms/ButtonExport/ButtonExport"
 import { FormTambahBarangKeluarHabisPakai } from "../atoms/Form/FormTambahBarangKeluarHabisPakai/FormTambahBarangKeluarHabisPakai"
-import PageContent from "../atoms/PageContent"
+import { PageContent } from "../atoms/PageContent"
 import Pagination from "../atoms/Pagination"
 import CustomTable from "../atoms/Table/CustomTable"
 import { FormEditBarangKeluarHabisPakai } from "../atoms/Form/FormEditBarangKeluarHabisPakai/FormEditBarangKeluarHabisPakai"
-import { ModalDeleteBarang } from "../atoms/Modal/ModalDeleteBarang/ModalDeleteBaranng"
+import { ModalDelete } from "../atoms/Modal/ModalDelete/ModalDelete"
 
 const ContentBarangHabisPakai = () => {
     const dispatch = useAppDispatch()
@@ -89,7 +89,7 @@ const ContentBarangHabisPakai = () => {
                 <FormEditBarangKeluarHabisPakai />
             </BaseModal>
 
-            <ModalDeleteBarang
+            <ModalDelete
                 opened={openedDeleteModal}
                 onAccept={() => {
                     console.log("accept")

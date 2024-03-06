@@ -1,7 +1,7 @@
 import {
   CSSVariablesResolver,
   MantineColorsTuple,
-  createTheme,
+  createTheme
 } from "@mantine/core";
 
 const myColor: MantineColorsTuple = [
@@ -30,6 +30,20 @@ export const theme = createTheme({
       textColorDark: "var(--mantine-color-dark-9)",
       textColorLight: "var(--mantine-color-gray-1)",
     },
+  },
+  components: {
+    // TextInput: TextInput.extend({
+    //   defaultProps: { radius: "sm" },
+    // }),
+    // PasswordInput: PasswordInput.extend({
+    //   defaultProps: { radius: "sm" },
+    // }),
+    // Input: Input.extend({
+    //   defaultProps: { radius: "sm" },
+    // }),
+    // Button: Button.extend({
+    //   defaultProps: { radius: "sm" },
+    // }),
   },
 });
 

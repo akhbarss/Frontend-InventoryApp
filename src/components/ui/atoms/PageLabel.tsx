@@ -9,7 +9,7 @@ interface TPageLabel {
 
 const PageLabel = ({ label }: TPageLabel) => {
     const dispatch = useAppDispatch()
-    useDocumentTitle(`${label} / Inventory App`)
+    useDocumentTitle(`${label} | Inventory App`)
     useEffect(() => {
         dispatch(setLabel(label))
     }, [])

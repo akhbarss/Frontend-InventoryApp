@@ -1,6 +1,8 @@
 import { Button, Group, MantineSpacing, Modal, ScrollArea, Stack, Title } from "@mantine/core";
+import { IoIosArrowRoundBack } from "react-icons/io";
 import { useAppSelector } from "../../../../store/store";
 import classes from "./BaseModal.module.css";
+import { BackButton } from "../BackButton/BackButton";
 
 interface BaseModalProps {
   size: MantineSpacing;
@@ -32,7 +34,7 @@ export const BaseModal = ({
       closeOnClickOutside={loading ? false : true}
       closeOnEscape={loading ? false : true}
       transitionProps={{
-        transition: "scale-y"
+        transition: "pop"
       }}
     >
       <Modal.Overlay
@@ -47,10 +49,12 @@ export const BaseModal = ({
           style={{
             position: "sticky",
             top: 0,
-            zIndex: 100000000
+            zIndex: 100000000,
+            display:"flex",
+            justifyContent:"center"
           }}
         >
-          <Title c={"gray"}>{title}</Title>
+          <Title  order={3} c={"gray"}>{title}</Title>
         </Modal.Header>
         <Modal.Body p={0} pos={"relative"} >
           <form onSubmit={e => onSubmit(e)}>
@@ -58,14 +62,16 @@ export const BaseModal = ({
               {children}
             </Stack>
             <Group component={"footer"} className={classes.modal_footer}>
-              <Button
+              {/* <Button
                 variant="default"
+                leftSection={<IoIosArrowRoundBack size={30}/>}
                 onClick={onClose}
                 type="button"
                 disabled={loading}
               >
                 Batal
-              </Button>
+              </Button> */}
+              <BackButton onClick={onClose}/>
               <Button type="submit" loading={loading}>Simpan</Button>
             </Group>
           </form>

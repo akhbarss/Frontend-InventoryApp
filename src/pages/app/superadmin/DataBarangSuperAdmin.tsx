@@ -1,6 +1,6 @@
 import { Group } from "@mantine/core"
-import ButtonExport from "../../../components/ui/atoms/ButtonExport"
-import PageContent from "../../../components/ui/atoms/PageContent"
+import { ButtonExport }from "../../../components/ui/atoms/ButtonExport/ButtonExport"
+import { PageContent } from "../../../components/ui/atoms/PageContent"
 import PageLabel from "../../../components/ui/atoms/PageLabel"
 import Pagination from "../../../components/ui/atoms/Pagination"
 import SelectButton from "../../../components/ui/atoms/SelectButton"
@@ -18,19 +18,15 @@ const DataBarangSuperAdmin = () => {
             kode_barang: "039jd20dehdibi",
             lokasi: "LAB 1",
             nama_barang: "ROuter"
-
         })
-
     }
 
     return (
         <>
             <PageLabel label="Data Barang" />
             <PageContent>
-                <Group justify="space-between">
-                    <Group>
+                <Group >
                         <SelectButton label="Jurusan" data={jurusan} />
-                    </Group>
                     <ButtonExport onCancel={() => { }} onConfirm={() => { }} />
                 </Group>
 

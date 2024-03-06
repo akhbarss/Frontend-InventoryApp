@@ -1,9 +1,9 @@
 import * as Mantine from "@mantine/core"
-import { LOGO_YATINDO } from "../../assets/image/Logo_Yatindo_IMAGE"
-import classes from "./NewLogin.module.css"
 import { isNotEmpty, useForm } from "@mantine/form"
 import { useNavigate } from "react-router-dom"
-import { FormValuesLogin } from "../../types/form"
+import { LOGO_YATINDO } from "../../assets/image/Logo_Yatindo_IMAGE"
+import { FormValuesLogin } from "../../utils/types/form"
+import classes from "./NewLogin.module.css"
 
 const NewLogin = () => {
     const navigate = useNavigate()
