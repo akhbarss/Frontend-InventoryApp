@@ -1,8 +1,3 @@
-// import '@mantine/core/styles/global.css';
-// import "@mantine/core/styles.css";
-// import "@mantine/dates/styles.css";
-// import "@mantine/dates/styles.layer.css";
-// import "@mantine/notifications/styles.css";
 import "@mantine/core/styles.css";
 import '@mantine/dates/styles.css';
 import '@mantine/dates/styles.layer.css';

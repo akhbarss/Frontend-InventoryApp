@@ -1,6 +1,6 @@
 import { useDocumentTitle } from "@mantine/hooks";
 import React, { useEffect } from "react";
-import { setLabel } from "../../../store/features/PageLabelSlice";
+import { setLabel } from "../../../store/features/page-label.slice";
 import { useAppDispatch } from "../../../store/store";
 
 interface TPageLabel {

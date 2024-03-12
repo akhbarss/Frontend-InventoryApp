@@ -2,14 +2,21 @@ import * as Mantine from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../../utils/api/auth";
-import { FormValuesLogin } from "../../../utils/types/form";
+import { setLoading } from "../../../store/features/loading.slice";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { ResponseError } from "../../../utils/ResponseError";
+import { getSession, login } from "../../../utils/api/auth";
+import { User } from "../../../utils/context/auth-provider.context";
+import { useAuth } from "../../../utils/hooks/useAuth";
 import { showNotifications } from "../../../utils/showNotifications";
+import { FormValuesLogin } from "../../../utils/types/form";
 import classes from "./LoginForm.module.css";
 
 const LoginForm = () => {
+  const { setUser } = useAuth();
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.loading.loading);
   const loginForm = useForm<FormValuesLogin>({
     initialValues: {
       username: "",
@@ -20,55 +27,69 @@ const LoginForm = () => {
       password: isNotEmpty("Harap isi password anda!"),
     },
   });
-  type DataFormLogin = typeof loginForm.values;
 
+  type DataFormLogin = typeof loginForm.values;
   const loginMutation = useMutation({
     mutationFn: login,
   });
-  const loading = loginMutation.status == "pending";
+
+  const setRole = (roleName: string) => {
+    setUser(
+      (prev: User) =>
+        ({
+          ...prev,
+          role: { ...prev.role, name: roleName },
+        } as User)
+    );
+  };
 
   const onSubmit = (payload: DataFormLogin) => {
+    dispatch(setLoading(true));
     loginMutation.mutate(payload, {
-      onSuccess: () => {
+      onSuccess: async () => {
+        const session = await getSession();
+        const role = session.user.role.name;
+        setRole(role);
+        if (role == "SUPERADMIN") {
+          dispatch(setLoading(false));
+          navigate("/superadmin/dashboard");
+        } else {
+          dispatch(setLoading(false));
+          navigate("/dashboard");
+        }
         showNotifications({
           message: "Welcome to Inventory App!",
           title: "Login Success!",
           type: "success",
         });
-        navigate("/dashboard");
       },
-      onError: (err) => {
-        console.log("login failed : ", err);
+      onError: (err: any) => {
+        dispatch(setLoading(false));
+        ResponseError(err);
       },
     });
   };
 
   return (
     <form
-      onSubmit={loginForm.onSubmit(onSubmit)}
       className={classes["form-wrapper"]}
+      onSubmit={loginForm.onSubmit(onSubmit)}
     >
-      <Mantine.Stack gap={"md"}>
+      <Mantine.Stack gap={""}>
         <Mantine.TextInput
-          disabled={loading}
-          autoFocus={true}
           size="md"
+          disabled={isLoading}
           label="Username"
-          styles={{
-            label: { fontWeight: "bold" },
-            error: { color: "#ffa29c", fontWeight: "bold" },
-          }}
+          classNames={{ label: classes.label, error: classes.error }}
           {...loginForm.getInputProps("username")}
+          autoFocus={true}
         />
 
         <Mantine.PasswordInput
-          disabled={loading}
+          disabled={isLoading}
           size="md"
           label="Password"
-          styles={{
-            label: { fontWeight: "bold" },
-            error: { color: "#ffa29c", fontWeight: "bold" },
-          }}
+          classNames={{ label: classes.label, error: classes.error }}
           {...loginForm.getInputProps("password")}
         />
 
@@ -77,7 +98,7 @@ const LoginForm = () => {
           size="md"
           fullWidth
           type="submit"
-          loading={loading}
+          loading={isLoading}
         >
           Login
         </Mantine.Button>

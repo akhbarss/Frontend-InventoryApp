@@ -4,7 +4,7 @@ import {
   TPermintaanBarang,
   columnsPermintaanBarang,
 } from "../../../../utils/columns/permintaan-barang";
-import { setOpenEditModal } from "../../../../store/features/ModalSlice";
+import { setOpenEditModal } from "../../../../store/features/modal.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import { usePermintaanBarangFormContext } from "../../../../utils/context/form-context";
 

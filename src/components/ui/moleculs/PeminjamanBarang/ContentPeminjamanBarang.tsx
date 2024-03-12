@@ -3,7 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import {
     setOpenDeleteModal,
     setOpenEditModal,
-} from "../../../../store/features/ModalSlice";
+} from "../../../../store/features/modal.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import {
     columnsPeminjamanBarang,

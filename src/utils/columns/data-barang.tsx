@@ -1,31 +1,36 @@
+import { ActionButtonColTable } from "@components/ui/atoms";
+import { ButtonHeaderColumn } from "@components/ui/atoms/ButtonHeaderColumn/ButtonHeaderColumn";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown } from "lucide-react";
-import { useDataBarangFormContext } from "../context/form-context";
-import { ButtonHeaderColumn } from "../../components/ui/atoms/ButtonHeaderColumn/ButtonHeaderColumn";
-import { ActionButtonColTable } from "../../components/ui/atoms/Table/ActionButtonColTable/ActionButtonColTable";
 import {
   setOpenDeleteModal,
   setOpenEditModal,
-} from "../../store/features/ModalSlice";
-import { useAppDispatch } from "../../store/store";
+} from "../../store/features/modal.slice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { Item } from "../api/items";
+import { useDataBarangHabisPakaiFormContext } from "../context/data-barang-form.context";
 import { createColumnHelpers } from "./columns";
 
-export type TDataBarang = {
-  id: number;
-  nama_barang: string;
-  lokasi: string;
-  jumlah: number | null;
-  kode_barang: string;
-  kategori: string;
-  kondisi: string;
-};
-
-export const columnsDataBarangAdmin = (): ColumnDef<TDataBarang, any>[] => {
+export const columnsDataBarangAdmin = (): ColumnDef<Item, any>[] => {
   const dispatch = useAppDispatch();
-  const form = useDataBarangFormContext();
+  const form = useDataBarangHabisPakaiFormContext();
+  const classRoom = useAppSelector((state) => state.class.classes);
 
   return [
-    createColumnHelpers<TDataBarang>().accessor("id", {
+    {
+      id: "manual_id",
+      header: ({ column }) => (
+        <ButtonHeaderColumn
+          label="Id"
+          column={column}
+          Icon={<ChevronsUpDown size={15} />}
+        />
+      ),
+      accessorFn: (_, index) => index + 1,
+      size: 90,
+      enablePinning: false,
+    },
+    createColumnHelpers<Item>().accessor("id", {
       id: "Id",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -39,7 +44,7 @@ export const columnsDataBarangAdmin = (): ColumnDef<TDataBarang, any>[] => {
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("nama_barang", {
+    createColumnHelpers<Item>().accessor("name", {
       id: "Nama Barang",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -52,7 +57,7 @@ export const columnsDataBarangAdmin = (): ColumnDef<TDataBarang, any>[] => {
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("kode_barang", {
+    createColumnHelpers<Item>().accessor("item_code", {
       id: "Kode Barang",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -65,9 +70,16 @@ export const columnsDataBarangAdmin = (): ColumnDef<TDataBarang, any>[] => {
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("lokasi", {
+    createColumnHelpers<Item>().accessor("class_id", {
       id: "Lokasi",
-      cell: (info) => info.getValue(),
+      cell: (info) => {
+        const id = info.getValue();
+        const room =
+          classRoom.length > 0
+            ? classRoom.find((clas) => clas.id == id)?.class_name
+            : null;
+        return room;
+      },
       header: ({ column }) => (
         <ButtonHeaderColumn
           label="Lokasi"
@@ -78,7 +90,7 @@ export const columnsDataBarangAdmin = (): ColumnDef<TDataBarang, any>[] => {
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("jumlah", {
+    createColumnHelpers<Item>().accessor("total_unit", {
       id: "Jumlah",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -91,43 +103,53 @@ export const columnsDataBarangAdmin = (): ColumnDef<TDataBarang, any>[] => {
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("kondisi", {
-      id: "kondisi",
-      cell: (info) => info.getValue(),
-      header: "kondisi",
-      enableColumnFilter: false,
-      enablePinning: false,
-    }),
-    createColumnHelpers<TDataBarang>().display({
+    // createColumnHelpers<Item>().accessor("kondisi", {
+    //   id: "kondisi",
+    //   cell: (info) => info.getValue(),
+    //   header: "kondisi",
+    //   enableColumnFilter: false,
+    //   enablePinning: false,
+    // }),
+    createColumnHelpers<Item>().display({
       id: "action",
       cell: ({ row }) => {
         const {
           id,
-          jumlah,
-          kondisi,
-          kode_barang,
-          lokasi,
-          kategori,
-          nama_barang,
+          name,
+          class_id,
+          item_code,
+          item_type,
+          source_fund,
+          status_item,
+          total_unit,
+          unit_price,
         } = row.original;
+        const prefix_code = item_code.split("-")[0];
+        const value_code = item_code.split("-")[1];
+
         return (
           <ActionButtonColTable
             withSetting
             withDelete
             onClickDelete={() => {
               dispatch(setOpenDeleteModal(true));
-              form.setValues({ id,nama_barang });
+              form.setValues({ id, name });
             }}
             onClickSetting={() => {
               dispatch(setOpenEditModal(true));
               form.setValues({
-                id: id,
-                nama_barang: nama_barang,
-                jumlah,
-                kondisi,
-                kode_barang,
-                lokasi,
-                kategori,
+                id,
+                name,
+                class_id: class_id + "",
+                item_code: {
+                  prefix_code,
+                  value_code,
+                },
+                item_type,
+                source_fund,
+                status_item,
+                total_unit,
+                unit_price,
               });
             }}
           />
@@ -141,12 +163,9 @@ export const columnsDataBarangAdmin = (): ColumnDef<TDataBarang, any>[] => {
   ];
 };
 
-export const columnsDataBarangSuperAdmin = (): ColumnDef<
-  TDataBarang,
-  any
->[] => {
+export const columnsDataBarangSuperAdmin = (): ColumnDef<any, any>[] => {
   return [
-    createColumnHelpers<TDataBarang>().accessor("id", {
+    createColumnHelpers<any>().accessor("id", {
       id: "Id",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -160,7 +179,7 @@ export const columnsDataBarangSuperAdmin = (): ColumnDef<
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("nama_barang", {
+    createColumnHelpers<any>().accessor("nama_barang", {
       id: "Nama Barang",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -173,7 +192,7 @@ export const columnsDataBarangSuperAdmin = (): ColumnDef<
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("kode_barang", {
+    createColumnHelpers<any>().accessor("kode_barang", {
       id: "Kode Barang",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -186,7 +205,7 @@ export const columnsDataBarangSuperAdmin = (): ColumnDef<
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("lokasi", {
+    createColumnHelpers<any>().accessor("lokasi", {
       id: "Lokasi",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -199,7 +218,7 @@ export const columnsDataBarangSuperAdmin = (): ColumnDef<
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("jumlah", {
+    createColumnHelpers<any>().accessor("jumlah", {
       id: "Jumlah",
       cell: (info) => info.getValue(),
       header: ({ column }) => (
@@ -212,7 +231,7 @@ export const columnsDataBarangSuperAdmin = (): ColumnDef<
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<TDataBarang>().accessor("kondisi", {
+    createColumnHelpers<any>().accessor("kondisi", {
       id: "kondisi",
       cell: (info) => info.getValue(),
       header: "kondisi",

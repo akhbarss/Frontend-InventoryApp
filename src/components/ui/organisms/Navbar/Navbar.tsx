@@ -1,15 +1,18 @@
 import * as Mantine from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
+import { useMutation } from "@tanstack/react-query";
 import { ChevronRight, Circle, LogOut } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LOGO_YATINDO } from "../../../../assets/image/Logo_Yatindo_IMAGE";
 import { menusAdmin, menusSuperAdmin } from "../../../../navigationConfig";
+import { nullifyObject } from "../../../../utils/actions/nullifyObject";
+import { logout } from "../../../../utils/api/auth";
+import { useAuth } from "../../../../utils/hooks/useAuth";
+import { showNotifications } from "../../../../utils/showNotifications";
 import Profile from "../Profile/Profile";
 import classes from "./Navbar.module.css";
-import { useMutation } from "@tanstack/react-query";
-import { logout } from "../../../../utils/api/auth";
-import { showNotifications } from "../../../../utils/showNotifications";
 
 interface TNavbar {
   opened: boolean;
@@ -26,9 +29,14 @@ const styleNavlink = {
 const Navbar = ({ toggle, opened }: TNavbar) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const [value, setValue] = useState("ADMIN");
-  const menus = value === "ADMIN" ? menusAdmin : menusSuperAdmin;
+  const { user, setUser } = useAuth();
+  const role = user?.role?.name;
+  const menus =
+    role === "ADMIN_TJKT"
+      ? menusAdmin
+      : role === "SUPERADMIN"
+      ? menusSuperAdmin
+      : [];
 
   const [openedDrawer, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
@@ -41,21 +49,37 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
     }
   };
 
-  const clickHandlerAvatar = () => openDrawer();
+  const logoutMutation = useMutation({ mutationFn: logout });
 
-  const logoutMutation = useMutation({
-    mutationFn: logout,
-  });
+  const clickHandlerAvatar = () => openDrawer();
   const onClickLogout = () => {
-    logoutMutation.mutate(undefined, {
-      onSuccess: (res) => {
-        navigate("/");
-        showNotifications({
-          title: "Logout Succesfull!",
-          type: "success",
-        });
+    modals.openContextModal({
+      modal: "confirmModal",
+      title: "Anda yakin ingin logout?",
+      innerProps: {
+        type: "danger",
+        description: "Anda yakin ingin logout?",
+        onAccept: () => {
+          setUser((prev) => nullifyObject(prev));
+          logoutMutation.mutate(undefined, {
+            onSuccess: () => {
+              navigate("/");
+              showNotifications({
+                title: "Logout Succesfull!",
+                type: "success",
+              });
+            },
+            onError: () => {
+              navigate("/");
+              showNotifications({
+                title: "Logout Succesfull!",
+                type: "success",
+              });
+            },
+          });
+        },
+        labels: { accept: "Logout" },
       },
-      onError: (err) => console.log(err),
     });
   };
 
@@ -78,13 +102,7 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
             onClick={toggle}
           />
           <Mantine.Flex gap={20} align={"center"} justify={"center"}>
-            <Mantine.Image
-              w={60}
-              src={LOGO_YATINDO}
-              onClick={() =>
-                setValue(value == "ADMIN" ? "SUPERADMIN" : "ADMIN")
-              }
-            />
+            <Mantine.Image w={60} src={LOGO_YATINDO} />
             <Mantine.Text fz={18} c={"gray"}>
               SMK TINTA EMAS INDONESIA
             </Mantine.Text>
@@ -153,16 +171,12 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
             <Mantine.Group
               p={"xs"}
               justify="space-between"
-              // style={{
               className={classes.card_profile}
-              //   borderRadius: "6px",
-              //   cursor: "pointer",
-              // }}
               onClick={clickHandlerAvatar}
             >
               <Mantine.Group>
                 <Mantine.Avatar />
-                <Mantine.Text>ADMIN</Mantine.Text>
+                <Mantine.Text>{user?.name}</Mantine.Text>
               </Mantine.Group>
               <ChevronRight />
             </Mantine.Group>

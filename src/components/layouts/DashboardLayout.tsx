@@ -1,14 +1,16 @@
+import { Header, Navbar } from "@components/ui/organisms";
 import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useClass } from "@utils/hooks/useClass";
+import { useSession } from "@utils/hooks/useSession";
 import { Outlet } from "react-router-dom";
-import { useSession } from "../../utils/hooks/useSession";
-import { Header, Navbar } from "../ui/organisms";
 import classes from "./DashboardLayout.module.css";
 
 const DashboardLayout = () => {
   const [opened, { toggle }] = useDisclosure();
 
   useSession();
+  useClass();
 
   return (
     <AppShell

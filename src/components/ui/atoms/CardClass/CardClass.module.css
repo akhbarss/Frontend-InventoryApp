@@ -5,7 +5,6 @@
   padding: 0;
   flex-direction: row;
   border-radius: 20px;
-  
 
   @mixin dark {
     background-color: var(--mantine-color-dark-9);
@@ -16,9 +15,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 1.5rem;
   border-start-end-radius: 50px;
   border-end-end-radius: 50px;
+  box-shadow: 11px 0px 18px -5px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 11px 0px 18px -5px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 11px 0px 18px -5px rgba(0, 0, 0, 0.75);
 
   @mixin dark {
     color: white;
@@ -26,6 +28,6 @@
 }
 
 .description {
-    flex: 1;
-    padding-right: 1rem;
+  flex: 1;
+  padding-right: 1rem;
 }

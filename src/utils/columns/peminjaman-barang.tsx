@@ -6,7 +6,7 @@ import { ActionButtonColTable } from "../../components/ui/atoms/Table/ActionButt
 import { formatFullDate } from "../format-date";
 import { createColumnHelpers } from "./columns";
 import { useAppDispatch } from "../../store/store";
-import { setOpenDeleteModal, setOpenEditModal } from "../../store/features/ModalSlice";
+import { setOpenDeleteModal, setOpenEditModal } from "../../store/features/modal.slice";
 
 export type TPeminjamanBarang = {
     id: number;

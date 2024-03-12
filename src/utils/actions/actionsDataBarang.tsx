@@ -1,74 +1,127 @@
-import { notifications } from "@mantine/notifications";
-import { useDataBarangFormContext } from "../context/form-context";
-import { setLoading } from "../../store/features/LoadingSlice";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   setOpenCreateModal,
+  setOpenDeleteModal,
   setOpenEditModal,
-} from "../../store/features/ModalSlice";
+} from "../../store/features/modal.slice";
 import { useAppDispatch } from "../../store/store";
-import { TDataBarang } from "../columns/data-barang";
-
-export const dataBarangAdmin: TDataBarang[] = [
-  {
-    id: 1,
-    nama_barang: "RJ 45",
-    lokasi: "Lab 1",
-    jumlah: 1,
-    kode_barang: "MSK",
-    kondisi: "Baik",
-    kategori: "Habis Pakai",
-  },
-];
+import { ResponseError } from "../ResponseError";
+import { createItem, deleteItem, updateItem } from "../api/items";
+import { useDataBarangHabisPakaiFormContext } from "../context/data-barang-form.context";
+import { showNotifications } from "../showNotifications";
+import {
+  CategoryItem,
+  PayloadCreateItem,
+  PayloadUpdateItem,
+} from "../types/items.type";
 
 export const useActionBarang = () => {
   const dispatch = useAppDispatch();
-  const form = useDataBarangFormContext();
+  const queryClient = useQueryClient();
+  const form = useDataBarangHabisPakaiFormContext();
 
-  const tambahBarang = (
-    // setData: React.Dispatch<React.SetStateAction<TDataBarang[]>>
-  ) => {
-    // dispatch(setLoading(true));
-    console.log("tasmbah barang")
-    // setTimeout(() => {
-    //   const { jumlah, kategori, kode_barang, kondisi, lokasi, nama_barang } =
-    //     form.values;
-    //   // setData((value) => [
-    //   //   ...value,
-    //   //   {
-    //   //     id: value[value.length - 1].id + 1,
-    //   //     jumlah,
-    //   //     kategori,
-    //   //     kode_barang,
-    //   //     kondisi,
-    //   //     lokasi,
-    //   //     nama_barang,
-    //   //   },
-    //   // ]);
-    //   dispatch(setLoading(false));
-    //   dispatch(setOpenCreateModal(false));
-    //   form.reset();
-    //   notifications.show({
-    //     message: "success",
-    //     color: "green",
-    //   });
-    // }, 1000);
+  const createItemMutation = useMutation({ mutationFn: createItem });
+  const updateItemMutation = useMutation({ mutationFn: updateItem });
+  const deleteItemMutation = useMutation({ mutationFn: deleteItem });
+
+  const createItemhandler = () => {
+    const {
+      class_id,
+      item_code: { prefix_code, value_code },
+      item_type,
+      name,
+      source_fund,
+      status_item,
+      total_unit,
+      unit_price,
+    } = form.values;
+
+    const payload: PayloadCreateItem = {
+      total_unit,
+      category_item: CategoryItem.BARANG_HABIS_PAKAI,
+      class_id: +class_id!,
+      item_code: `${prefix_code.toUpperCase()}-${value_code}`,
+      item_type,
+      name,
+      source_fund,
+      status_item,
+      unit_price,
+    };
+    console.log({ payload });
+    createItemMutation.mutate(payload, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["get_items"] });
+        showNotifications({
+          type: "success",
+          title: "Create Item Succesfull!",
+        });
+        dispatch(setOpenCreateModal(false));
+        form.reset();
+      },
+      onError: (err: any) => ResponseError(err),
+    });
   };
 
   const editBarang = () => {
-    dispatch(setLoading(true));
-    setTimeout(() => {
-      dispatch(setLoading(false));
-      dispatch(setOpenEditModal(false));
-      form.reset();
-      notifications.show({
-        message: "success",
-        color: "green",
-      });
-    }, 5000);
+    const {
+      id,
+      class_id,
+      item_code: { prefix_code, value_code },
+      item_type,
+      name,
+      source_fund,
+      status_item,
+      total_unit,
+      unit_price,
+    } = form.values;
+
+    const payload: PayloadUpdateItem = {
+      id: id!,
+      total_unit,
+      category_item: CategoryItem.BARANG_HABIS_PAKAI,
+      class_id: +class_id!,
+      item_code: `${prefix_code.toUpperCase()}-${value_code}`,
+      item_type,
+      name,
+      source_fund,
+      status_item,
+      unit_price,
+    };
+    console.log({ payload });
+
+    updateItemMutation.mutate(payload, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["get_items"] });
+        showNotifications({
+          type: "success",
+          title: "Update Item Succesfull!",
+        });
+        dispatch(setOpenEditModal(false));
+        form.reset();
+      },
+      onError: (err: any) => ResponseError(err),
+    });
+  };
+
+  const deleteItemHandler = () => {
+    const itemId = form.values.id;
+    deleteItemMutation.mutate(itemId!, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["get_items"] });
+        dispatch(setOpenDeleteModal(false));
+        showNotifications({
+          type: "success",
+          title: "Delete Item Succesfull!",
+        });
+        form.reset();
+      },
+      onError: (err: any) => ResponseError(err),
+    });
   };
 
   return {
-    tambahBarang,
+    tambahBarang: createItemhandler,
     editBarang,
+    deleteBarang: deleteItemHandler,
   };
 };

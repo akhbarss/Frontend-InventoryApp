@@ -3,3 +3,12 @@
   max-width: 370px;
   margin-top: 50px;
 }
+
+.label {
+  font-weight: bold;
+}
+
+.error {
+  color: "#ffa29c";
+  font-weight: bold;
+}

@@ -1,20 +1,5 @@
 import { createFormContext } from "@mantine/form";
 
-type DataBarangFormValues =  {
-  id: number | null;
-  nama_barang: string;
-  lokasi: string;
-  jumlah: number | null;
-  kode_barang: string;
-  kategori: string;
-  kondisi: string;
-}
-export const [
-  DataBarangFormProvider,
-  useDataBarangFormContext,
-  useDataBarangForm,
-] = createFormContext<DataBarangFormValues>();
-
 interface BarangKeluarHabisPakaiFormValues {
   barangKeluar: {
     key: string;

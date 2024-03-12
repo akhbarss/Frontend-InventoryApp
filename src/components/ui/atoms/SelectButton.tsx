@@ -1,29 +1,34 @@
-import { Button, Menu } from '@mantine/core';
-import { IoMdArrowDropdown } from "react-icons/io";
+import { Select } from "@mantine/core";
 
-interface SelectButtonProps {
-    label: string;
-    data: { label: string }[]
-}
+type SelectButtonProps<T> = {
+  width?: number;
+  label: string;
+  data: T[];
+  onChange: (selectedItem: T | null) => void;
+};
 
-const SelectButton = ({ label ,data}: SelectButtonProps) => {
-    return (
-        <>
-            <Menu transitionProps={{ transition: "scale" }} width={200} shadow="md" styles={{ arrow: {} }} position='bottom-start'>
-                <Menu.Target>
-                    <Button rightSection={<IoMdArrowDropdown />}>{label}</Button>
-                </Menu.Target>
+const SelectButton = <T extends string | { label: string; value: string }>({
+  data,
+  width,
+  label,
+  onChange,
+}: SelectButtonProps<T>) => {
+  return (
+    <Select
+      width={10}
+      checkIconPosition="right"
+      style={{ width }}
+      data={data.map((item) =>
+        typeof item === "string" ? { label: item, value: item } : item
+      )}
+      placeholder={label}
+      onChange={(value) => {
+        if (onChange) {
+          onChange(value as T);
+        }
+      }}
+    />
+  );
+};
 
-                <Menu.Dropdown>
-                    {data && data.map(item => (
-                        <Menu.Item key={item.label}>
-                            {item.label}
-                        </Menu.Item>
-                    ))}
-                </Menu.Dropdown>
-            </Menu>
-        </>
-    )
-}
-
-export default SelectButton
+export default SelectButton;

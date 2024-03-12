@@ -5,7 +5,7 @@ import { ActionButtonColTable } from "../../components/ui/atoms/Table/ActionButt
 import { useAppDispatch } from "../../store/store";
 import { createColumnHelpers } from "./columns";
 import { useBarangKeluarHabisPakaiFormContext } from "../context/form-context";
-import { setOpenDeleteModal, setOpenEditModal } from "../../store/features/ModalSlice";
+import { setOpenDeleteModal, setOpenEditModal } from "../../store/features/modal.slice";
 
 export type TBarangHabisPakai = {
     id: number;

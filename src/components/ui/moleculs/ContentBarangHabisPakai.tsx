@@ -8,7 +8,7 @@ import {
     useBarangKeluarHabisPakaiFormContext
 } from "../../../utils/context/form-context"
 
-import { setOpenDeleteModal, setOpenEditModal } from "../../../store/features/ModalSlice"
+import { setOpenDeleteModal, setOpenEditModal } from "../../../store/features/modal.slice"
 import { useAppDispatch, useAppSelector } from "../../../store/store"
 import { BaseModal } from "../atoms/BaseModal/BaseModal"
 import ActionButtonBarangKeluar from "../atoms/ButtonBarangKeluar/ButtonBarangKeluar"

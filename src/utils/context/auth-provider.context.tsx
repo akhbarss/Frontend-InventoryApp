@@ -10,11 +10,13 @@ export type User = {
     name: string | null;
     major: string | null;
   } | null;
-};
+} ;
 
 interface AuthContextProps {
-  user: User | null;
+  user: User ;
   setUser: React.Dispatch<React.SetStateAction<User>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -24,31 +26,34 @@ const AuthContext = createContext<AuthContextProps>({
     role: {
       id: null,
       major: null,
-      name: null
+      name: null,
     },
     role_id: null,
     username: null,
   },
   setUser: () => {},
+  loading: false,
+  setLoading: () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User>({
     id: null,
     name: null,
     role: {
       id: null,
       major: null,
-      name: null
+      name: null,
     },
     role_id: null,
     username: null,
   });
 
   return (
-    <AuthContext.Provider value={{ setUser, user }}>
+    <AuthContext.Provider value={{ setUser, user, loading, setLoading }}>
       {children}
     </AuthContext.Provider>
   );

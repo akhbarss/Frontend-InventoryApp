@@ -1,5 +1,6 @@
 import * as Mantine from "@mantine/core";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { useAuth } from "../../../../utils/hooks/useAuth";
 
 interface ProfileProps {
   onClose: () => void;
@@ -7,42 +8,54 @@ interface ProfileProps {
 }
 
 const Profile = ({ onClose, opened }: ProfileProps) => {
+  const { user } = useAuth();
+
   return (
     <Mantine.Drawer
       title="Profile"
       opened={opened}
+      withCloseButton={false}
       position="right"
       onClose={onClose}
-      styles={{
-        title: { display: "none" },
-      }}
+      styles={{ title: { display: "none" } }}
     >
       <Mantine.Avatar
-        size={130}
+        size={120}
         style={{
           marginInline: "auto",
         }}
       />
-      <Mantine.Stack px={"xl"} gap={"sm"}>
+      <Mantine.Stack px={"xl"} gap={"xs"}>
         <Mantine.TextInput
-          size="sm"
+          size="xs"
+          readOnly
+          label="Name"
+          value={user?.name ?? ""}
+        />
+        <Mantine.TextInput
+          size="xs"
           readOnly
           label="Username"
-          value={"akhbarss"}
+          value={user?.username ?? ""}
         />
-        <Mantine.TextInput size="sm" readOnly label="Jurusan" value={"TKJ"} />
-        <Mantine.TextInput size="sm" readOnly label="Role" value={"Admin"} />
+        <Mantine.TextInput size="xs" readOnly label="Jurusan" value={"TKJ"} />
+        <Mantine.TextInput
+          size="xs"
+          readOnly
+          label="Role"
+          value={user?.role?.name ?? ""}
+        />
 
-        <Mantine.PasswordInput mt={20} size="sm" label="Password" />
-        <Mantine.PasswordInput size="sm" label="Confirm Password" />
+        <Mantine.PasswordInput mt={"xs"} size="xs" label="Password" />
+        <Mantine.PasswordInput size="xs" label="Confirm Password" />
 
         <Mantine.Flex justify={"end"}>
-          <Mantine.Button size="sm" color="red">
+          <Mantine.Button size="xs" color="red">
             Ubah Password
           </Mantine.Button>
         </Mantine.Flex>
         <Mantine.Button
-          size="sm"
+          size="xs"
           variant="default"
           onClick={() => onClose()}
           leftSection={<IoIosArrowRoundBack size={30} />}

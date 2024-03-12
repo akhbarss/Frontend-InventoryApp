@@ -3,7 +3,7 @@ import { ChevronsUpDown } from "lucide-react";
 import { useBarangKeluarTidakHabisPakaiFormContext } from "../context/form-context";
 import { ButtonHeaderColumn } from "../../components/ui/atoms/ButtonHeaderColumn/ButtonHeaderColumn";
 import { ActionButtonColTable } from "../../components/ui/atoms/Table/ActionButtonColTable/ActionButtonColTable";
-import { setOpenDeleteModal, setOpenEditModal } from "../../store/features/ModalSlice";
+import { setOpenDeleteModal, setOpenEditModal } from "../../store/features/modal.slice";
 import { useAppDispatch } from "../../store/store";
 import { createColumnHelpers } from "./columns";
 

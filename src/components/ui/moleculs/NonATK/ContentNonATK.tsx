@@ -9,7 +9,7 @@ import { BaseModal } from "../../atoms/BaseModal/BaseModal"
 import { FormPermintaanBarang } from "../../atoms/Form/FormPermintaanBarang/FormPermintaanBarang"
 import { useAppDispatch, useAppSelector } from "../../../../store/store"
 import { usePermintaanBarangFormContext } from "../../../../utils/context/form-context"
-import { setOpenEditModal } from "../../../../store/features/ModalSlice"
+import { setOpenEditModal } from "../../../../store/features/modal.slice"
 
 
 

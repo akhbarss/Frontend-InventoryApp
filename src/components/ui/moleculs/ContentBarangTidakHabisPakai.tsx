@@ -12,7 +12,7 @@ import { FormTambahBarangKeluarTidakHabisPakai } from '../atoms/Form/FormTambahB
 import { PageContent } from '../atoms/PageContent'
 import Pagination from '../atoms/Pagination'
 import CustomTable from '../atoms/Table/CustomTable'
-import { setOpenDeleteModal, setOpenEditModal } from '../../../store/features/ModalSlice'
+import { setOpenDeleteModal, setOpenEditModal } from '../../../store/features/modal.slice'
 import { ModalDelete } from '../atoms/Modal/ModalDelete/ModalDelete'
 
 const ContentBarangTidakHabisPakai = () => {

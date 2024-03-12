@@ -1,0 +1,15 @@
+.modal_title {
+    font-weight: bold;
+    font-size: 24;
+  }
+  
+  .modal_header {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .modal_action {
+    display: flex;
+    justify-content: space-between;
+  }
+  

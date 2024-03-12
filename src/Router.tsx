@@ -1,27 +1,30 @@
 import { Suspense, lazy } from "react";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import Providers from "./Providers";
 import AuthLayout from "./components/layouts/AuthLayout";
 import DashboardLayout from "./components/layouts/DashboardLayout";
+import Providers from "./components/layouts/Providers/Provider";
+import RolePage from "./components/layouts/RolePage";
 
-import PeminjamanBarang from "./pages/app/PeminjamanBarang";
-import Dashboard from "./pages/app/admin/DashboardAdmin";
-import DataBarangAdmin from "./pages/app/admin/DataBarangAdmin";
-import HabisPakaiPage from "./pages/app/barang/HabisPakaiPage";
-import TidakHabisPakaiPage from "./pages/app/barang/TidakHabisPakaiPage";
-import ATK from "./pages/app/permintaan-barang/ATK";
-import NonATK from "./pages/app/permintaan-barang/NonATK";
+import Loading from "./components/ui/atoms/Loading/Loading";
+import { loader as DataBarang_HabisPakai_Loader } from "./pages/app/admin/DataBarang/HabisPakai"
 
-import BarangDiPinjam from "./pages/app/BarangDiPinjam";
-import ManajemenAdminPage from "./pages/app/ManajemenAdminPage";
-import BelumDiProsesPage from "./pages/app/barang/BelumDiProsesPage";
-import TelahDiProsesPage from "./pages/app/barang/TelahDiProsesPage";
-import ManajemenBarang from "./pages/app/manajemen-barang/ManajemenBarang";
-import DashboardSuperAdmin from "./pages/app/superadmin/DashboardSuperAdmin";
-import DataBarangSuperAdmin from "./pages/app/superadmin/DataBarangSuperAdmin";
-import Login from "./pages/auth/Login";
-import Loading from "./components/ui/atoms/Loading";
+const Login = lazy(() => import("./pages/auth/Login"));
+
+const DashboardAdmin = lazy(() => import("./pages/app/admin/DashboardAdmin"));
+const DataBarang_HabisPakai = lazy(() => import("./pages/app/admin/DataBarang/HabisPakai"));
+const DataBarang_TidakHabisPakai = lazy(() => import("./pages/app/admin/DataBarang/TidakHabisPakai"));
+const ManajemenBarang_HabisPakai = lazy(() => import("./pages/app/admin/ManajemenBarang/HabisPakai"));
+const ManajemenBarang_TidakHabisPakai = lazy(() => import("./pages/app/admin/ManajemenBarang/TidakHabisPakai"));
+const PermintaanBarang_ATK = lazy(() => import("./pages/app/admin/PermintaanBarang/ATK"));
+const PermintaanBarang_NonATK = lazy(() => import("./pages/app/admin/PermintaanBarang/NonATK"));
+
+const Dashboard_SuperAdmin = lazy(() => import("./pages/app/superadmin/Dashboard"));
+const DataBarang_SuperAdmin = lazy(() => import("./pages/app/superadmin/DataBarang"));
+const PermintaanBarang_BelumDiProses = lazy(() => import("./pages/app/superadmin/PermintaanBarang/BelumDiProses"));
+const PermintaanBarang_TelahDiProses = lazy(() => import("./pages/app/superadmin/PermintaanBarang/BelumDiProses"));
+const ManajemenUser = lazy(() => import("./pages/app/superadmin/ManajemenUser"));
+
 
 export const routes = createBrowserRouter([
   {
@@ -47,83 +50,100 @@ export const routes = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           {
-            path: "dashboard",
-            Component: lazy(() => import("./pages/app/admin/DashboardAdmin")),
-          },
-          {
-            path: "data-barang",
-            element: <DataBarangAdmin />,
-          },
-          {
-            path: "barang-keluar-masuk",
-            children: [
-              {
-                path: "barang-habis-pakai",
-                element: <HabisPakaiPage />,
-              },
-              {
-                path: "barang-tidak-habis-pakai",
-                element: <TidakHabisPakaiPage />,
-              },
-            ],
-          },
-          {
-            path: "manajemen-barang",
-            element: <ManajemenBarang />,
-          },
-          {
-            path: "permintaan-barang",
-            children: [
-              {
-                path: "atk",
-                element: <ATK />,
-              },
-              {
-                path: "non-atk",
-                element: <NonATK />,
-              },
-            ],
-          },
-          {
-            path: "peminjaman-barang",
-            element: <PeminjamanBarang />,
-          },
-          {
-            path: "superadmin",
+            element: (
+              <RolePage roles={["ADMIN_TJKT"]}>
+                <Outlet />
+              </RolePage>
+            ),
             children: [
               {
                 path: "dashboard",
-                element: <DashboardSuperAdmin />,
+                element: <DashboardAdmin />,
               },
               {
                 path: "data-barang",
-                element: <DataBarangSuperAdmin />,
+                element: <Outlet />,
+                children: [
+                  {
+                    path: "habis-pakai",
+                    element: <DataBarang_HabisPakai />,
+                    loader: DataBarang_HabisPakai_Loader,
+                  },
+                  {
+                    path: "tidak-habis-pakai",
+                    element: <DataBarang_TidakHabisPakai />,
+                  },
+                ],
+              },
+              {
+                path: "manajemen-barang",
+                children: [
+                  {
+                    path: "barang-habis-pakai",
+                    element: <ManajemenBarang_HabisPakai />,
+                  },
+                  {
+                    path: "barang-tidak-habis-pakai",
+                    element: <ManajemenBarang_TidakHabisPakai />,
+                  },
+                ],
+              },
+              {
+                path: "permintaan-barang",
+                children: [
+                  {
+                    path: "atk",
+                    element: <PermintaanBarang_ATK />,
+                  },
+                  {
+                    path: "non-atk",
+                    element: <PermintaanBarang_NonATK />,
+                  },
+                ],
+              },
+              // {
+              //   path: "peminjaman-barang",
+              //   element: <PeminjamanBarang />,
+              // },
+            ],
+          },
+          {
+            path: "superadmin",
+            element: (
+              <RolePage roles={["SUPERADMIN"]}>
+                <Outlet />
+              </RolePage>
+            ),
+            children: [
+              {
+                path: "dashboard",
+                element: <Dashboard_SuperAdmin />,
               },
               {
                 path: "data-barang",
-                element: <DataBarangSuperAdmin />,
+                element: <DataBarang_SuperAdmin />,
               },
               {
                 path: "permintaan-barang",
                 children: [
                   {
                     path: "belum-diproses",
-                    element: <BelumDiProsesPage />,
+                    element: <PermintaanBarang_BelumDiProses />,
                   },
                   {
                     path: "telah-diproses",
-                    element: <TelahDiProsesPage />,
+                    element: <PermintaanBarang_TelahDiProses />,
                   },
                 ],
               },
               {
                 path: "manajemen-admin",
-                element: <ManajemenAdminPage />,
+                element: <ManajemenUser />,
               },
-              {
-                path: "barang-dipinjam",
-                element: <BarangDiPinjam />,
-              },
+              // {
+              //   path: "barang-dipinjam",
+              //   element: <BarangDiPinjam />,
+              // },
             ],
           },
         ],

@@ -1,82 +1,95 @@
-import { Button, Group, MantineSpacing, Modal, ScrollArea, Stack, Title } from "@mantine/core";
-import { IoIosArrowRoundBack } from "react-icons/io";
+import {
+  Button,
+  Group,
+  MantineSpacing,
+  Modal,
+  ScrollArea,
+  Stack,
+  Title,
+} from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { useIsMutating } from "@tanstack/react-query";
 import { useAppSelector } from "../../../../store/store";
-import classes from "./BaseModal.module.css";
 import { BackButton } from "../BackButton/BackButton";
+import classes from "./BaseModal.module.css";
 
-interface BaseModalProps {
+interface BaseModalProps<T> {
   size: MantineSpacing;
   opened: boolean;
   onClose: () => void;
   children: React.ReactNode;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   title: string;
+  resetForm: UseFormReturnType<T, (values: T) => T>;
 }
 
-export const BaseModal = ({
+export const BaseModal = <T extends unknown>({
   onClose,
   opened,
   onSubmit,
   children,
   title,
-  size
-}: BaseModalProps) => {
+  size,
+  resetForm,
+}: BaseModalProps<T>) => {
+  const loadingRdx = useAppSelector((state) => state.loading.loading);
+  const isMutate = useIsMutating();
+  const isLoading = loadingRdx || isMutate > 0;
 
-  const loading = useAppSelector(state => state.loading.loading)
+  const onCloseModal = () => {
+    onClose();
+    resetForm.reset();
+  };
 
   return (
     <Modal.Root
       centered
       size={size}
       opened={opened}
-      onClose={onClose}
+      onClose={onCloseModal}
       component={ScrollArea.Autosize}
-      closeOnClickOutside={loading ? false : true}
-      closeOnEscape={loading ? false : true}
+      closeOnClickOutside={isLoading ? false : true}
+      closeOnEscape={isLoading ? false : true}
       transitionProps={{
-        transition: "pop"
+        transition: "pop",
       }}
     >
       <Modal.Overlay
         transitionProps={{
-          transition: "pop-bottom-left"
+          transition: "pop-bottom-left",
         }}
         backgroundOpacity={0.8}
         blur={2}
       />
       <Modal.Content className={classes.modal_content}>
-        <Modal.Header className={classes.modal_header}
+        <Modal.Header
+          className={classes.modal_header}
           style={{
             position: "sticky",
             top: 0,
             zIndex: 100000000,
-            display:"flex",
-            justifyContent:"center"
+            display: "flex",
+            justifyContent: "center",
           }}
         >
-          <Title  order={3} c={"gray"}>{title}</Title>
+          <Title order={3} c={"gray"}>
+            {title}
+          </Title>
         </Modal.Header>
-        <Modal.Body p={0} pos={"relative"} >
-          <form onSubmit={e => onSubmit(e)}>
+        <Modal.Body p={0} pos={"relative"}>
+          <form onSubmit={(e) => onSubmit(e)}>
             <Stack pt={"lg"} pb={"3rem"} mih={"10rem"} px={"md"}>
               {children}
             </Stack>
             <Group component={"footer"} className={classes.modal_footer}>
-              {/* <Button
-                variant="default"
-                leftSection={<IoIosArrowRoundBack size={30}/>}
-                onClick={onClose}
-                type="button"
-                disabled={loading}
-              >
-                Batal
-              </Button> */}
-              <BackButton onClick={onClose}/>
-              <Button type="submit" loading={loading}>Simpan</Button>
+              <BackButton onClick={onClose} />
+              <Button type="submit" loading={isLoading}>
+                Simpan
+              </Button>
             </Group>
           </form>
         </Modal.Body>
       </Modal.Content>
     </Modal.Root>
-  )
-}
+  );
+};
