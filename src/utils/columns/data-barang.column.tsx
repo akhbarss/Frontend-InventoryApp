@@ -22,32 +22,37 @@ export const columnsDataBarangAdmin = (
   const classRoom = useAppSelector((state) => state.class.classes);
 
   return [
-    {
+    // {
+    //   id: "manual_id",
+    //   header: ({ column }) => (
+    //     <ButtonHeaderColumn
+    //       label="Id"
+    //       column={column}
+    //       Icon={<ChevronsUpDown size={15} />}
+    //     />
+    //   ),
+    //   accessorFn: (_, index) => index + 1,
+    //   size: 90,
+    //   enablePinning: false,
+    // },
+    createColumnHelpers<Item>().display({
       id: "manual_id",
-      header: ({ column }) => (
-        <ButtonHeaderColumn
-          label="Id"
-          column={column}
-          Icon={<ChevronsUpDown size={15} />}
-        />
-      ),
-      accessorFn: (_, index) => index + 1,
-      size: 90,
-      enablePinning: true,
-    },
-    createColumnHelpers<Item>().accessor("id", {
-      id: "Id",
-      header: ({ column }) => (
-        <ButtonHeaderColumn
-          label="ID"
-          column={column}
-          Icon={<ChevronsUpDown size={15} />}
-        />
-      ),
-      size: 80,
-      enableColumnFilter: false,
-      enablePinning: false,
+      cell: ({ row: { index } }) => index + 1,
+      header: "Id"
     }),
+    // createColumnHelpers<Item>().accessor("id", {
+    //   id: "Id",
+    //   header: ({ column }) => (
+    //     <ButtonHeaderColumn
+    //       label="ID"
+    //       column={column}
+    //       Icon={<ChevronsUpDown size={15} />}
+    //     />
+    //   ),
+    //   size: 80,
+    //   enableColumnFilter: false,
+    //   enablePinning: false,
+    // }),
     createColumnHelpers<Item>().accessor("name", {
       id: "Nama Barang",
       header: ({ column }) => (
@@ -213,19 +218,10 @@ export const columnsDataBarangSuperAdmin = (
   const form = useDataBarangFormContext();
   const classRoom = useAppSelector((state) => state.class.classes);
   return [
-    createColumnHelpers<any>().accessor("id", {
-      id: "Id",
-      cell: (info) => info.getValue(),
-      header: ({ column }) => (
-        <ButtonHeaderColumn
-          label="ID"
-          column={column}
-          Icon={<ChevronsUpDown size={15} />}
-        />
-      ),
-      size: 80,
-      enableColumnFilter: false,
-      enablePinning: false,
+    createColumnHelpers<Item>().display({
+      id: "manual_id",
+      cell: ({ row: { index } }) => index + 1,
+      header: "Id"
     }),
     createColumnHelpers<Item>().accessor("name", {
       id: "Nama Barang",
