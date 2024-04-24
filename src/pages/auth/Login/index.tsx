@@ -24,7 +24,7 @@ const LoginRightSide = () => {
       style={{ backgroundImage: `url(${BG_YATINDO})` }}
     >
       <Mantine.Box className={classes["greetings"]}>
-        <Mantine.Title fz={50}>Good Morning!</Mantine.Title>
+        <Mantine.Title fz={50}>Hello Again!</Mantine.Title>
         <Mantine.Title mt={10} fw={"normal"} order={3}>
           Bekasi, Indonesia
         </Mantine.Title>

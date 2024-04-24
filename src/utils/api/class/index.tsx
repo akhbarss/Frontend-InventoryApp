@@ -10,12 +10,21 @@ export type Class = {
 type ResponseGetClasses = {
   statusCode: number;
   message: string;
-  data: Class[];
+  payload: {
+    findManyClass: Class[];
+  };
 };
 
 export const getClasses = createAsyncThunk(
   "class/getClasses",
-  (): Promise<ResponseGetClasses> => {
-    return axios.get("/class/find-all").then((res) => res.data);
+  async (): Promise<ResponseGetClasses> => {
+    return axios.get("/class/find-all").then((res) => {
+      return res.data;
+    });
   }
 );
+
+export const getAllClasses = async (): Promise<ResponseGetClasses> => {
+  const response = await axios.get("/class/find-all");
+  return response.data;
+};

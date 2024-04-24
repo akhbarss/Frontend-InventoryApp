@@ -32,6 +32,7 @@ export const [
 ] = createFormContext<BarangKeluarTidakHabisPakaiFormValues>();
 
 interface PermintaanBarangFormValues {
+  id: number | null;
   namaBarang: string;
   lokasi: string;
   jumlahBarang: number | null;

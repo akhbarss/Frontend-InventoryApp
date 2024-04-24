@@ -1,11 +1,11 @@
 import { Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { setOpenEditModal } from "../../../../store/features/modal.slice";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import {
   TPermintaanBarang,
   columnsPermintaanBarang,
-} from "../../../../utils/columns/permintaan-barang";
-import { setOpenEditModal } from "../../../../store/features/modal.slice";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
+} from "../../../../utils/columns/permintaan-barang.admin.columns";
 import { usePermintaanBarangFormContext } from "../../../../utils/context/form-context";
 
 import {
@@ -16,6 +16,11 @@ import {
   PageContent,
 } from "../../atoms";
 import CustomTable from "../../atoms/Table/CustomTable";
+import { useQuery } from "@tanstack/react-query";
+import { getAllReedemCode } from "@utils/api/reedem_code/index.api";
+import usePagination from "@utils/hooks/usePagination";
+import { getAllItemRequest } from "@utils/api/item-request/item-request.api";
+import { ItemType } from "@utils/types/items.type";
 
 export const ContentAtk = () => {
   const [opened, { close, open }] = useDisclosure();
@@ -25,18 +30,29 @@ export const ContentAtk = () => {
   );
 
   const form = usePermintaanBarangFormContext();
-
-  const data: TPermintaanBarang[] = [];
-  for (let i = 1; i < 10; i++) {
-    data.push({
-      id: i,
-      nama_barang: "buku" + i,
-      jumlah_barang: i,
-      lokasi: "string" + i,
-      keterangan: "string" + i,
-      status: "string" + i,
-    });
-  }
+  const { page, take } = usePagination();
+  const {} = useQuery({
+    queryKey: ["get_all_item_request"],
+    queryFn: () =>
+      getAllItemRequest({
+        itemType: ItemType.ATK,
+        status: null!,
+        major: null!,
+        orderBy: "ASC",
+        page,
+        take,
+      }),
+  });
+  // for (let i = 1; i < 10; i++) {
+  //   data.push({
+  //     id: i,
+  //     nama_barang: "buku" + i,
+  //     jumlah_barang: i,
+  //     lokasi: "string" + i,
+  //     keterangan: "string" + i,
+  //     status: "string" + i,
+  //   });
+  // }
 
   return (
     <PageContent>
@@ -58,11 +74,12 @@ export const ContentAtk = () => {
         totalPage={10}
         totalRecords={10}
         columns={columnsPermintaanBarang()}
-        data={data}
+        data={[]}
       />
 
       {/* MOdal Create */}
       <BaseModal
+        resetForm={form}
         onSubmit={() => {}}
         size={"md"}
         title="Tambah Permintaan"
@@ -77,6 +94,7 @@ export const ContentAtk = () => {
 
       {/* MOdal Edit */}
       <BaseModal
+        resetForm={form}
         onSubmit={() => {}}
         size={"md"}
         title="Edit Permintaan"

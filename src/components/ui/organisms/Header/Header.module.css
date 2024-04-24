@@ -1,6 +1,6 @@
 .header-wrapper {
   color: var(--mantine-color-white);
-  padding-inline: 3rem;
+  padding-inline: 1rem;
   background-color: #29166F;
 
   @mixin dark {
@@ -14,8 +14,6 @@
 }
 
 .burger {
-  margin-top: 10px;
-
   @media (min-width: $mantine-breakpoint-sm) {
     opacity: 0;;
   }

@@ -29,7 +29,7 @@ export const ClassSlice = createSlice({
     });
     builder.addCase(getClasses.fulfilled, (state, action) => {
       state.loading = false;
-      state.classes = action.payload.data;
+      state.classes = action.payload.payload.findManyClass;
       state.error = "";
     });
     builder.addCase(getClasses.rejected, (state, action) => {

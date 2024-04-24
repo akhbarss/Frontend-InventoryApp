@@ -1,43 +1,16 @@
-import { isNotEmpty } from "@mantine/form";
-import { randomId } from "@mantine/hooks";
-import PageLabel from "../../../../../components/ui/atoms/PageLabel";
-import ContentBarangTidakHabisPakai from "../../../../../components/ui/moleculs/ContentBarangTidakHabisPakai";
-import {
-  BarangKeluarTidakHabisPakaiFormProvider,
-  useBarangKeluarTidakHabisPakaiForm,
-} from "../../../../../utils/context/form-context";
+import PageLabel from "@components/ui/atoms/PageLabel";
+import { CategoryItem } from "@utils/types/items.type";
+import { ContentManajemenBarang } from "../ContentManajemenBarang";
 
-const TidakHabisPakaiPage = () => {
-  const form = useBarangKeluarTidakHabisPakaiForm({
-    initialValues: {
-      barangKeluar: [
-        {
-          id: null,
-          siswa: "",
-          jumlah: 0,
-          namaBarang: "",
-          ruanganLab: "",
-          key: randomId(),
-        },
-      ],
-    },
-    validate: {
-      barangKeluar: {
-        namaBarang: isNotEmpty(""),
-        jumlah: isNotEmpty(""),
-        ruanganLab: isNotEmpty(""),
-      },
-    },
-  });
-
+const ManajemenBarang_TidakHabisPakai = () => {
   return (
     <>
       <PageLabel label="Barang Tidak Habis Pakai" />
-      <BarangKeluarTidakHabisPakaiFormProvider form={form}>
-        <ContentBarangTidakHabisPakai />
-      </BarangKeluarTidakHabisPakaiFormProvider>
+      <ContentManajemenBarang
+        categoryItem={CategoryItem.BARANG_TIDAK_HABIS_PAKAI}
+      />
     </>
   );
 };
 
-export default TidakHabisPakaiPage;
+export default ManajemenBarang_TidakHabisPakai;

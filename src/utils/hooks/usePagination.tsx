@@ -1,48 +1,28 @@
-import { useState, useEffect } from "react";
+import { ITEM_PER_PAGE } from "@utils/constant";
+import { useCallback, useMemo, useState } from "react";
 
-interface PaginationData<T> {
-  nextPage: () => void;
-  prevPage: () => void;
-  goToPage: (page: number) => void;
-  currentData: T[];
-  currentPage: number;
-  maxPage: number;
-}
+const usePagination = () => {
+  const [page, setPage] = useState(1);
+  const [take, setTake] = useState(ITEM_PER_PAGE);
 
-// Custom hook untuk pagination
-export function usePagination<T>(
-  data: T[],
-  itemsPerPage: number
-): PaginationData<T> {
-  const [currentPage, setCurrentPage] = useState(1);
-  const maxPage = Math.ceil(data.length / itemsPerPage);
-  const [currentData, setCurrentData] = useState<T[]>([]);
+  const setActivePage = useCallback((value: number) => {
+    setPage(value);
+  }, []);
+  const setItemPerPage = useCallback((value: number) => {
+    setTake(value);
+    setPage(1)
+  }, []);
 
-  useEffect(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    setCurrentData(data.slice(startIndex, endIndex));
-  }, [currentPage, data, itemsPerPage]);
+  const paginationProps = useMemo(() => {
+    return {
+      take,
+      page,
+      setActivePage,
+      setItemPerPage,
+    };
+  }, [page, take]);
 
-  function nextPage() {
-    setCurrentPage((currentPage) => Math.min(currentPage + 1, maxPage));
-  }
+  return paginationProps;
+};
 
-  function prevPage() {
-    setCurrentPage((currentPage) => Math.max(currentPage - 1, 1));
-  }
-
-  function goToPage(page: number) {
-    const pageNumber = Math.max(1, Math.min(page, maxPage));
-    setCurrentPage(pageNumber);
-  }
-
-  return {
-    nextPage,
-    prevPage,
-    goToPage,
-    currentData,
-    currentPage,
-    maxPage,
-  };
-}
+export default usePagination;

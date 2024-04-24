@@ -3,13 +3,26 @@ export enum CategoryItem {
   BARANG_TIDAK_HABIS_PAKAI = "Barang Tidak Habis Pakai",
 }
 
+export enum ItemCondition {
+  BAIK = "BAIK",
+  RUSAK_RINGAN = "RUSAK RINGAN",
+  RUSAK_BERAT = "RUSAK BERAT",
+}
+
 export enum ItemType {
-  ATK,
+  ATK = "ATK",
   NON_ATK = "NON ATK",
 }
 export enum ItemSource {
   BOSDA = "BOSDA",
   NON_BOSDA = "NON BOSDA",
+}
+
+export enum StatusItem {
+  TERSEDIA = "TERSEDIA",
+  SEDANG_DIPAKAI = "SEDANG DIPAKAI",
+  SEDANG_DIPINJAM = "SEDANG DIPINJAM",
+  TIDAK_TERSEDIA = "TIDAK TERSEDIA",
 }
 
 export type PayloadCreateItem = {

@@ -12,6 +12,7 @@ import { useIsMutating } from "@tanstack/react-query";
 import { useAppSelector } from "../../../../store/store";
 import { BackButton } from "../BackButton/BackButton";
 import classes from "./BaseModal.module.css";
+import React from "react";
 
 interface BaseModalProps<T> {
   size: MantineSpacing;
@@ -32,6 +33,7 @@ export const BaseModal = <T extends unknown>({
   size,
   resetForm,
 }: BaseModalProps<T>) => {
+  console.log("base modal")
   const loadingRdx = useAppSelector((state) => state.loading.loading);
   const isMutate = useIsMutating();
   const isLoading = loadingRdx || isMutate > 0;
@@ -48,7 +50,8 @@ export const BaseModal = <T extends unknown>({
       opened={opened}
       onClose={onCloseModal}
       component={ScrollArea.Autosize}
-      closeOnClickOutside={isLoading ? false : true}
+      // closeOnClickOutside={isLoading ? false : true}
+      closeOnClickOutside={false}
       closeOnEscape={isLoading ? false : true}
       transitionProps={{
         transition: "pop",
@@ -82,7 +85,7 @@ export const BaseModal = <T extends unknown>({
               {children}
             </Stack>
             <Group component={"footer"} className={classes.modal_footer}>
-              <BackButton onClick={onClose} />
+              <BackButton onClick={onCloseModal} />
               <Button type="submit" loading={isLoading}>
                 Simpan
               </Button>
@@ -93,3 +96,5 @@ export const BaseModal = <T extends unknown>({
     </Modal.Root>
   );
 };
+
+export const MemoizedBaseModal = React.memo(BaseModal) as typeof BaseModal

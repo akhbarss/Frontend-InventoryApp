@@ -1,4 +1,6 @@
+import { ResponseData } from "@utils/types/response.type";
 import axios from "../../axios";
+import { ROLE } from "@utils/types/user,type";
 
 type PayloadLogin = {
   username: string;
@@ -6,17 +8,17 @@ type PayloadLogin = {
 };
 
 type ResponseSession = {
-    user: {
+  getSession: {
+    id: number;
+    name: string;
+    username: string;
+    role_id: number;
+    role: {
       id: number;
       name: string;
-      username: string;
-      role_id: number;
-      role: {
-        id: number;
-        name: string;
-        major: string;
-      };
+      major: ROLE;
     };
+  };
 };
 
 export const login = async (payload: PayloadLogin): Promise<any> => {
@@ -29,7 +31,7 @@ export const logout = async (): Promise<any> => {
   return response.data;
 };
 
-export const getSession = async (): Promise<ResponseSession> => {
+export const getSession = async (): Promise<ResponseData<ResponseSession>> => {
   const response = await axios.get("/auth/get-session");
-  return response.data.data;
+  return response.data;
 };

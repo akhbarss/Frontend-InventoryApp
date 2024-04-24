@@ -1,7 +1,8 @@
 import { createFormContext } from "@mantine/form";
-import { ItemSource, ItemType } from "../types/items.type";
+import { ItemCondition, ItemSource, ItemType } from "@utils/types/items.type";
 
-type DataBarang_HabisPakai_FormValues = {
+
+export type DataBarangFormValues = {
   id: number | null;
   name: string;
   item_code: {
@@ -14,21 +15,11 @@ type DataBarang_HabisPakai_FormValues = {
   class_id: string | null;
   item_type: ItemType;
   total_unit: string;
+  item_condition: ItemCondition
 };
 
-type DataBarang_TidakHabisPakai_FormValues = {} & Omit<
-  DataBarang_HabisPakai_FormValues,
-  "total_unit"
->;
-
 export const [
-  DataBarangHabisPakaiFormProvider,
-  useDataBarangHabisPakaiFormContext,
-  useDataBarangHabisPakaiForm,
-] = createFormContext<DataBarang_HabisPakai_FormValues>();
-
-export const [
-  DataBarangTidakHabisPakaiFormProvider,
-  useDataBarangTidakHabisPakaiFormContext,
-  useDataBarangTidakHabisPakaiForm,
-] = createFormContext<DataBarang_TidakHabisPakai_FormValues>();
+  DataBarangFormProvider,
+  useDataBarangFormContext,
+  useDataBarangForm,
+] = createFormContext<DataBarangFormValues>();

@@ -3,6 +3,7 @@ import { modals } from "@mantine/modals";
 import { BsFiletypeXlsx } from "react-icons/bs";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import classes from "./ButtonExport.module.css";
+import React from "react";
 
 interface ButtonExportProps {
   onConfirm: () => void;
@@ -40,15 +41,18 @@ function exportExcel({ onCancel, onConfirm }: ButtonExportProps) {
   });
 }
 
-export const ButtonExport = ({ onConfirm, onCancel }: ButtonExportProps) => {
-  const onExport = () => exportExcel({ onCancel, onConfirm });
-  return (
-    <Button
-      color="teal"
-      leftSection={<BsFiletypeXlsx size={20} />}
-      onClick={onExport}
-    >
-      Export XLSX
-    </Button>
-  );
-};
+export const ButtonExport = React.memo(
+  ({ onConfirm, onCancel }: ButtonExportProps) => {
+    console.log("button export ");
+    const onExport = () => exportExcel({ onCancel, onConfirm });
+    return (
+      <Button
+        color="teal"
+        leftSection={<BsFiletypeXlsx size={20} />}
+        onClick={onExport}
+      >
+        Export XLSX
+      </Button>
+    );
+  }
+);

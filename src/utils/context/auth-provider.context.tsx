@@ -1,3 +1,4 @@
+import { ROLE } from "@utils/types/user,type";
 import { createContext, useState } from "react";
 
 export type User = {
@@ -8,12 +9,12 @@ export type User = {
   role: {
     id: number | null;
     name: string | null;
-    major: string | null;
+    major: ROLE | null;
   } | null;
-} ;
+};
 
 interface AuthContextProps {
-  user: User ;
+  user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;

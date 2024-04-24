@@ -5,7 +5,6 @@ import { useAuth } from "./useAuth";
 export const useGetClassRoom = (): { label: string; value: string }[] => {
   const { user } = useAuth();
   const classRoom = useAppSelector((state) => state.class.classes);
-
   const role = user.role?.major;
   const matchRoleClass = useMemo(() => {
     return classRoom

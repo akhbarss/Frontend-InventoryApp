@@ -1,9 +1,21 @@
-import { PasswordInput, Select, TextInput } from "@mantine/core";
-import { jurusan } from "../../../../../utils/constant";
+import { ComboboxData, PasswordInput, Select, TextInput } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import { getAllRole } from "@utils/api/role/index.api";
 import { useManajemenAdminFormContext } from "../../../../../utils/context/form-context";
 
 export const FormManajemenAdmin = () => {
   const form = useManajemenAdminFormContext();
+  const { data } = useQuery({
+    queryKey: ["get_all_role"],
+    queryFn: getAllRole,
+  });
+
+  console.log({ data });
+
+  const dataRole: ComboboxData = data?.payload.findAllRoles.map((role) => ({
+    value: role.id + "",
+    label: role.major,
+  }))!;
 
   return (
     <>
@@ -11,7 +23,7 @@ export const FormManajemenAdmin = () => {
       <Select
         label="Jurusan"
         minLength={5}
-        data={jurusan}
+        data={dataRole}
         {...form.getInputProps("jurusan")}
       />
       <TextInput

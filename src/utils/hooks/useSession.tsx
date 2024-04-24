@@ -10,19 +10,18 @@ export const useSession = () => {
   const { setUser } = useAuth();
   const { data, isError, isLoading, isFetching } = useQuery({
     queryKey: ["get_session"],
-    queryFn:  getSession,
+    queryFn: getSession,
   });
-
   useEffect(() => {
-    if (!isError && !isLoading && data?.user) {
+    if (!isError && !isLoading && data?.payload.getSession) {
       setUser((prev) => ({
         ...prev,
-        ...data.user,
+        ...data.payload.getSession,
       }));
     }
 
     if (isError) {
-      const name = "inven-cookies-id"
+      const name = "inven-cookies-id";
       document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
       navigate("/auth/login");
     }

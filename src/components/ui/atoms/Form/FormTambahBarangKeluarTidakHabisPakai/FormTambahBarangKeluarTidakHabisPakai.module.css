@@ -1,14 +1,13 @@
 .label {
-    top: 75px;
-    z-index: 100000;
-    position: sticky !important;
-    padding-block: 0.5rem;
-    background-color: white;
-    border-bottom: 1px solid var(--mantine-color-gray-3);
-    
-    @mixin dark {
-      background-color: var(--mantine-color-dark-7);
-      border-color: var(--mantine-color-dark-5);
-    }
-  }
+  top: 60px;
+  z-index: 100000;
+  position: sticky !important;
+  padding-block: 0.5rem;
+  background-color: white;
+  border-bottom: 1px solid var(--mantine-color-gray-3);
   
+  @mixin dark {
+    background-color: var(--mantine-color-dark-7);
+    border-color: var(--mantine-color-dark-5);
+  }
+}

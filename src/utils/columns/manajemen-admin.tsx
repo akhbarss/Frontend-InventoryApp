@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { ROLE } from "@utils/types/user,type";
 import { ChevronsUpDown } from "lucide-react";
 import { ButtonHeaderColumn } from "../../components/ui/atoms/ButtonHeaderColumn/ButtonHeaderColumn";
 import { ActionButtonColTable } from "../../components/ui/atoms/Table/ActionButtonColTable/ActionButtonColTable";
@@ -15,13 +16,8 @@ export type TManajemenAdmin = {
   name: string;
   username: string;
   role_id: number;
-} ;
-enum ROLE {
-  ADMIN_TJKT = "TJKT",
-  ADMIN_AK = "AK",
-  ADMIN_TO = "TO",
-  ADMIN_TE = "TE",
-}
+};
+
 export const columnsManajemenAdmin = (): ColumnDef<TManajemenAdmin, any>[] => {
   const dispatch = useAppDispatch();
   const form = useManajemenAdminFormContext();

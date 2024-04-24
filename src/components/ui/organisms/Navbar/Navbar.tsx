@@ -1,7 +1,9 @@
 import * as Mantine from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getAllRole } from "@utils/api/role/index.api";
+import { useIsFetchingSession } from "@utils/hooks/useIsFetchingSession";
 import { ChevronRight, Circle, LogOut } from "lucide-react";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,17 +28,27 @@ const styleNavlink = {
   },
 };
 
-const Navbar = ({ toggle, opened }: TNavbar) => {
+const Navbar = React.memo(({ toggle, opened }: TNavbar) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, setUser } = useAuth();
+  const isFetchingSession = useIsFetchingSession();
+
+  const { data } = useQuery({
+    queryKey: ["get_all_role"],
+    queryFn: getAllRole,
+  });
+  const rolesAdmin = data?.payload.findAllRoles
+    .map((role) => role.name)
+    .filter((role) => role !== "SUPERADMIN");
+    
   const role = user?.role?.name;
-  const menus =
-    role === "ADMIN_TJKT"
-      ? menusAdmin
-      : role === "SUPERADMIN"
-      ? menusSuperAdmin
-      : [];
+
+  const menus = rolesAdmin?.includes(role!)
+    ? menusAdmin
+    : role === "SUPERADMIN"
+    ? menusSuperAdmin
+    : [];
 
   const [openedDrawer, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);
@@ -87,9 +99,9 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
     <>
       <Profile onClose={closeDrawer} opened={openedDrawer} />
 
-      <Mantine.AppShell.Navbar p={"lg"} classNames={{ navbar: classes.navbar }}>
+      <Mantine.AppShell.Navbar p={"xs"} classNames={{ navbar: classes.navbar }}>
         <Mantine.AppShell.Section
-          pt={20}
+          pt={10}
           pb={30}
           style={{
             borderBottom: "1px solid var(--mantine-color-gray-5)",
@@ -115,50 +127,52 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
           offsetScrollbars
           component={Mantine.ScrollArea}
         >
-          {menus.map((item, i) => {
-            const active = item?.path == pathname;
-            return (
-              <React.Fragment key={i}>
-                <Mantine.NavLink
-                  mt={5}
-                  variant="filled"
-                  label={item.label}
-                  childrenOffset={30}
-                  styles={styleNavlink}
-                  color={isDark ? "black" : "#29166F"}
-                  defaultOpened={item.children?.some(
-                    (child) => child.path == pathname
-                  )}
-                  leftSection={
-                    <Mantine.ThemeIcon
-                      color="#29166F"
-                      variant={isDark ? "gradient" : "white"}
-                    >
-                      {item.icon}
-                    </Mantine.ThemeIcon>
-                  }
-                  onClick={() => handleNavLinkClick(item.path)}
-                  active={active}
-                  children={item.children?.map((child, index) => {
-                    const activeChild = child?.path == pathname;
-                    return (
-                      <Mantine.NavLink
-                        mt={5}
-                        key={index}
-                        variant="filled"
-                        label={child.label}
-                        styles={styleNavlink}
-                        active={activeChild}
-                        leftSection={<Circle size={8} />}
-                        color={isDark ? "black" : "#29166F"}
-                        onClick={() => handleNavLinkClick(child.path)}
-                      />
-                    );
-                  })}
-                />
-              </React.Fragment>
-            );
-          })}
+          <Mantine.Skeleton visible={isFetchingSession}>
+            {menus.map((item, i) => {
+              const active = item?.path == pathname;
+              return (
+                <React.Fragment key={i}>
+                  <Mantine.NavLink
+                    mt={5}
+                    variant="filled"
+                    label={item.label}
+                    childrenOffset={30}
+                    styles={styleNavlink}
+                    color={isDark ? "black" : "#29166F"}
+                    defaultOpened={item.children?.some(
+                      (child) => child.path == pathname
+                    )}
+                    leftSection={
+                      <Mantine.ThemeIcon
+                        color="#29166F"
+                        variant={isDark ? "gradient" : "white"}
+                      >
+                        {item.icon}
+                      </Mantine.ThemeIcon>
+                    }
+                    onClick={() => handleNavLinkClick(item.path)}
+                    active={active}
+                    children={item.children?.map((child, index) => {
+                      const activeChild = child?.path == pathname;
+                      return (
+                        <Mantine.NavLink
+                          mt={5}
+                          key={index}
+                          variant="filled"
+                          label={child.label}
+                          styles={styleNavlink}
+                          active={activeChild}
+                          leftSection={<Circle size={8} />}
+                          color={isDark ? "black" : "#29166F"}
+                          onClick={() => handleNavLinkClick(child.path)}
+                        />
+                      );
+                    })}
+                  />
+                </React.Fragment>
+              );
+            })}
+          </Mantine.Skeleton>
         </Mantine.AppShell.Section>
 
         <Mantine.AppShell.Section
@@ -168,18 +182,20 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
           }}
         >
           <Mantine.Stack>
-            <Mantine.Group
-              p={"xs"}
-              justify="space-between"
-              className={classes.card_profile}
-              onClick={clickHandlerAvatar}
-            >
-              <Mantine.Group>
-                <Mantine.Avatar />
-                <Mantine.Text>{user?.name}</Mantine.Text>
+            <Mantine.Skeleton visible={isFetchingSession}>
+              <Mantine.Group
+                p={"xs"}
+                justify="space-between"
+                className={classes.card_profile}
+                onClick={clickHandlerAvatar}
+              >
+                <Mantine.Group>
+                  <Mantine.Avatar />
+                  <Mantine.Text>{user?.name}</Mantine.Text>
+                </Mantine.Group>
+                <ChevronRight />
               </Mantine.Group>
-              <ChevronRight />
-            </Mantine.Group>
+            </Mantine.Skeleton>
             <Mantine.Button
               onClick={onClickLogout}
               color="red"
@@ -192,6 +208,6 @@ const Navbar = ({ toggle, opened }: TNavbar) => {
       </Mantine.AppShell.Navbar>
     </>
   );
-};
+});
 
 export default Navbar;

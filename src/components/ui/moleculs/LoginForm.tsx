@@ -19,8 +19,8 @@ const LoginForm = () => {
   const isLoading = useAppSelector((state) => state.loading.loading);
   const loginForm = useForm<FormValuesLogin>({
     initialValues: {
-      username: "",
-      password: "",
+      username: "admin",
+      password: "12345678",
     },
     validate: {
       username: isNotEmpty("Harap isi username anda!"),
@@ -47,23 +47,30 @@ const LoginForm = () => {
     dispatch(setLoading(true));
     loginMutation.mutate(payload, {
       onSuccess: async () => {
-        const session = await getSession();
-        const role = session.user.role.name;
-        setRole(role);
-        if (role == "SUPERADMIN") {
+        try {
+          const session = await getSession();
+
+          const role = session?.payload.getSession.role.name;
+          setRole(role);
+          if (role == "SUPERADMIN") {
+            dispatch(setLoading(false));
+            navigate("/superadmin/dashboard");
+          } else {
+            dispatch(setLoading(false));
+            navigate("/dashboard");
+          }
+          showNotifications({
+            message: "Welcome to Inventory App!",
+            title: "Login Success!",
+            type: "success",
+          });
+        } catch (error) {
           dispatch(setLoading(false));
-          navigate("/superadmin/dashboard");
-        } else {
-          dispatch(setLoading(false));
-          navigate("/dashboard");
+          console.log({error})
         }
-        showNotifications({
-          message: "Welcome to Inventory App!",
-          title: "Login Success!",
-          type: "success",
-        });
       },
       onError: (err: any) => {
+        console.log({ err });
         dispatch(setLoading(false));
         ResponseError(err);
       },

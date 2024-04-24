@@ -1,15 +1,14 @@
 import { Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
-    setOpenDeleteModal,
-    setOpenEditModal,
+  setOpenDeleteModal,
+  setOpenEditModal,
 } from "../../../../store/features/modal.slice";
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import {
-    columnsPeminjamanBarang,
-    dataPeminjamanBarang,
+  columnsPeminjamanBarang,
+  dataPeminjamanBarang,
 } from "../../../../utils/columns/peminjaman-barang";
-import { ruanganLab } from "../../../../utils/constant";
 import { usePeminjamanBarangFormContext } from "../../../../utils/context/form-context";
 import { BaseModal } from "../../atoms/BaseModal/BaseModal";
 import { ButtonPlus } from "../../atoms/ButtonPlus/ButtonPlus";
@@ -50,7 +49,12 @@ export const ContentPeminjamanBarang = () => {
     <>
       <PageContent>
         <Group justify="space-between">
-          <SelectButton label="Ruangan" data={ruanganLab} />
+          <SelectButton
+            value={""}
+            onChange={() => {}}
+            label="Ruangan"
+            data={[]}
+          />
           <ButtonPlus onClick={() => open()}>Tambah Peminjaman</ButtonPlus>
         </Group>
         <CustomTable
@@ -64,6 +68,7 @@ export const ContentPeminjamanBarang = () => {
       </PageContent>
 
       <BaseModal
+        resetForm={form}
         opened={openedCreateModal}
         onClose={() => {
           close();
@@ -78,6 +83,7 @@ export const ContentPeminjamanBarang = () => {
 
       <BaseModal
         opened={openedEditModal}
+        resetForm={form}
         onClose={() => {
           dispatch(setOpenEditModal(false));
           form.reset();
@@ -90,6 +96,7 @@ export const ContentPeminjamanBarang = () => {
       </BaseModal>
 
       <ModalDelete
+        resetForm={form}
         onAccept={() => {}}
         onClose={() => {
           dispatch(setOpenDeleteModal(false));

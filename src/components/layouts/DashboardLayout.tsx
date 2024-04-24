@@ -5,12 +5,17 @@ import { useClass } from "@utils/hooks/useClass";
 import { useSession } from "@utils/hooks/useSession";
 import { Outlet } from "react-router-dom";
 import classes from "./DashboardLayout.module.css";
+import { useCallback, useMemo } from "react";
 
 const DashboardLayout = () => {
   const [opened, { toggle }] = useDisclosure();
 
   useSession();
   useClass();
+
+  const toggles = useCallback(toggle, [toggle]);
+  const header = useMemo(() => <Header opened={opened} toggle={toggles} />,[opened, toggles]);
+  const navbar = useMemo(() => <Navbar opened={opened} toggle={toggles} />,[opened, toggles]);
 
   return (
     <AppShell
@@ -23,8 +28,8 @@ const DashboardLayout = () => {
         collapsed: { mobile: !opened },
       }}
     >
-      <Header opened={opened} toggle={toggle} />
-      <Navbar opened={opened} toggle={toggle} />
+      {header}
+      {navbar}
       <AppShell.Main pt={"11rem"} className={classes.main}>
         <Outlet />
       </AppShell.Main>

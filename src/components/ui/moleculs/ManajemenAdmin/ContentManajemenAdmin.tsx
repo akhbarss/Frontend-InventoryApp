@@ -1,11 +1,11 @@
+import { BaseModal, ButtonPlus, PageContent } from "@components/ui/atoms";
+import { FormManajemenAdmin } from "@components/ui/atoms/Form/FormManajemenAdmin/FormManajemenAdmin";
+import { ModalDelete } from "@components/ui/atoms/Modal/ModalDelete/ModalDelete";
+import Paginations from "@components/ui/atoms/Pagination";
+import CustomTable from "@components/ui/atoms/Table/CustomTable";
 import { Group } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  setOpenCreateModal,
-  setOpenDeleteModal,
-  setOpenEditModal,
-} from "../../../../store/features/modal.slice";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import { ResponseError } from "@utils/ResponseError";
 import {
   PayloadCreateUser,
   PayloadUpdateUser,
@@ -13,31 +13,32 @@ import {
   deleteUser,
   getUsers,
   updateUser,
-} from "../../../../utils/api/user";
-import { columnsManajemenAdmin } from "../../../../utils/columns/manajemen-admin";
-import { useManajemenAdminFormContext } from "../../../../utils/context/form-context";
-import { showNotifications } from "../../../../utils/showNotifications";
-import { BaseModal } from "../../atoms/BaseModal/BaseModal";
-import { ButtonPlus } from "../../atoms/ButtonPlus/ButtonPlus";
-import { FormManajemenAdmin } from "../../atoms/Form/FormManajemenAdmin/FormManajemenAdmin";
-import { ModalDelete } from "../../atoms/Modal/ModalDelete/ModalDelete";
-import { PageContent } from "../../atoms/PageContent";
-import Pagination from "../../atoms/Pagination";
-import CustomTable from "../../atoms/Table/CustomTable";
+} from "@utils/api/user";
+import { columnsManajemenAdmin } from "@utils/columns/manajemen-admin";
+import { useManajemenAdminFormContext } from "@utils/context/form-context";
+import { useModal } from "@utils/hooks/useModal";
+import usePagination from "@utils/hooks/usePagination";
+import { showNotifications } from "@utils/showNotifications";
 
 export const ContentManajemenAdmin = () => {
-  const openedCreate = useAppSelector((state) => state.modal.openedCreateModal);
-  const openedEdit = useAppSelector((state) => state.modal.openedEditModal);
-  const openedDelete = useAppSelector((state) => state.modal.openedDeleteModal);
+  const {
+    openedCreate,
+    openedDelete,
+    openedEdit,
+    openModalCreate,
+    closeModalCreate,
+    closeModalDelete,
+    closeModalEdit,
+  } = useModal();
+  const { page, setActivePage, setItemPerPage, take } = usePagination();
 
-  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
   const form = useManajemenAdminFormContext();
   type PayloadAdmin = typeof form.values;
 
-  const { data } = useQuery({
-    queryKey: ["get_users"],
-    queryFn: () => getUsers({ page: 1, take: 50 }),
+  const { data, isLoading } = useQuery({
+    queryKey: ["get_users", { pagination: { page, take } }],
+    queryFn: () => getUsers({ page, take }),
   });
 
   const createAdminMutation = useMutation({ mutationFn: createUser });
@@ -45,13 +46,8 @@ export const ContentManajemenAdmin = () => {
   const updateAdminMutation = useMutation({ mutationFn: updateUser });
 
   const onSubmitCreateUser = (payload: PayloadAdmin) => {
-    const { jurusan, name, password, username } = payload;
-    const data: PayloadCreateUser = {
-      name,
-      password,
-      role_id: +jurusan,
-      username,
-    };
+    const { jurusan, ...datas } = payload;
+    const data: PayloadCreateUser = { ...datas, role_id: +jurusan };
     createAdminMutation.mutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["get_users"] });
@@ -59,7 +55,7 @@ export const ContentManajemenAdmin = () => {
           type: "success",
           title: "Create User Successfull!",
         });
-        dispatch(setOpenCreateModal(false));
+        closeModalCreate();
         form.reset();
       },
       onError: (err: any) => {
@@ -70,15 +66,12 @@ export const ContentManajemenAdmin = () => {
   };
 
   const onSubmitUpdateUser = (payload: PayloadAdmin) => {
-    const { jurusan, name, password, username, id } = payload;
+    const { id, jurusan, ...datas } = payload;
     const data: PayloadUpdateUser = {
+      ...datas,
       userId: id!,
-      name,
-      password,
       role_id: +jurusan,
-      username,
     };
-
     updateAdminMutation.mutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["get_users"] });
@@ -86,7 +79,7 @@ export const ContentManajemenAdmin = () => {
           type: "success",
           title: "Update User Successfull!",
         });
-        dispatch(setOpenEditModal(false));
+        closeModalEdit();
         form.reset();
       },
       onError: (err: any) => {
@@ -105,39 +98,37 @@ export const ContentManajemenAdmin = () => {
           title: "Delete User Successfull!",
         });
         queryClient.invalidateQueries({ queryKey: ["get_users"] });
-        dispatch(setOpenDeleteModal(false));
+        closeModalDelete();
         form.reset();
       },
-      onError: (err) => {
-        console.log(err);
-      },
+      onError: (err: any) => ResponseError(err),
     });
   };
 
   return (
     <PageContent>
       <Group justify="end">
-        <ButtonPlus onClick={() => dispatch(setOpenCreateModal(true))}>
-          Tambah User
-        </ButtonPlus>
+        <ButtonPlus onClick={openModalCreate}>Tambah User</ButtonPlus>
       </Group>
 
       <CustomTable
-        loading={false}
-        totalData={100}
-        totalPage={10}
-        totalRecords={10}
+        loading={isLoading}
+        data={data?.payload.data!}
         columns={columnsManajemenAdmin()}
-        data={data?.data!}
+        totalPage={data?.payload?.meta.pageCount!}
       />
 
-      <Pagination />
+      <Paginations
+        activePage={page}
+        loading={isLoading}
+        onPageChange={setActivePage}
+        onItemPerPageChange={setItemPerPage}
+        totalPage={data?.payload?.meta.pageCount!}
+      />
 
       <BaseModal
-        onClose={() => {
-          dispatch(setOpenCreateModal(false));
-          form.reset();
-        }}
+        resetForm={form}
+        onClose={closeModalCreate}
         opened={openedCreate}
         onSubmit={(e) => {
           e.preventDefault();
@@ -157,10 +148,8 @@ export const ContentManajemenAdmin = () => {
       </BaseModal>
 
       <BaseModal
-        onClose={() => {
-          dispatch(setOpenEditModal(false));
-          form.reset();
-        }}
+        resetForm={form}
+        onClose={closeModalEdit}
         opened={openedEdit}
         onSubmit={form.onSubmit(onSubmitUpdateUser)}
         size={"md"}
@@ -170,10 +159,9 @@ export const ContentManajemenAdmin = () => {
       </BaseModal>
 
       <ModalDelete
+        resetForm={form}
         onAccept={onSubmitDeleteUser}
-        onClose={() => {
-          dispatch(setOpenDeleteModal(false));
-        }}
+        onClose={closeModalDelete}
         opened={openedDelete}
         message={`Anda yakin ingin menghapus admin ${form.values.name}?`}
         title="Hapus User"

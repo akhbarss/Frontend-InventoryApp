@@ -1,5 +1,5 @@
-import { Card, Flex, ScrollArea, Skeleton, Table, Text } from "@mantine/core";
-import type { ColumnDef } from "@tanstack/react-table";
+import { Card, Flex, ScrollArea, Skeleton, Table } from "@mantine/core";
+import type { ColumnDef, Table as TableProps } from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import cx from "clsx";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import classes from "./CustomTable.module.css";
 
 type CustomTableFC<T> = {
@@ -16,8 +16,8 @@ type CustomTableFC<T> = {
   data: T[] | null;
   loading: boolean;
   totalPage: number | null;
-  totalRecords: number | null;
-  totalData: number | null;
+  totalRecords?: number | null;
+  totalData?: number | null;
   useExportExcel?: boolean;
   useSearchFilter?: boolean;
   useSearchInput?: boolean;
@@ -27,22 +27,32 @@ type CustomTableFC<T> = {
     label: string;
   };
 };
+type HeadTableProps<T> = {
+  table: TableProps<T>;
+  scrolled: boolean;
+  filterCell?: JSX.Element;
+};
 
-const CustomTable = <T,>({
+type BodyTableProps<T> = {
+  loading: boolean;
+  table: TableProps<T>;
+};
+
+const CustomTable = <T extends unknown>({
   columns,
   data = [],
   loading,
   totalPage,
   filterCell,
 }: CustomTableFC<T>) => {
-  console.log("Custom table");
+  console.log("table");
   const [scrolled, setScrolled] = useState(false);
+  const finalData = useMemo(() => data, [data]);
+  const finalColumnDef = useMemo(() => columns, [columns]);
 
-  const finalData = useMemo(() => data, [data]),
-    finalColumnDef = useMemo(() => columns, [columns]);
   const table = useReactTable<T>({
-    columns: finalColumnDef ?? [],
     data: finalData as T[],
+    columns: finalColumnDef,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -63,94 +73,15 @@ const CustomTable = <T,>({
           h={300}
           offsetScrollbars={true}
           onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
-          styles={{
-            viewport: { padding: 0 },
-            thumb: { zIndex: 100 },
-          }}
+          styles={{ viewport: { padding: 0 }, thumb: { zIndex: 100 } }}
         >
           <Table miw={700} layout="fixed" highlightOnHover striped>
-            <Table.Thead
-              className={cx(classes.header, { [classes.scrolled]: scrolled })}
-            >
-              {table?.getHeaderGroups() &&
-                table?.getHeaderGroups().map((headerElement) => (
-                  <Table.Tr key={headerElement.id}>
-                    {headerElement.headers.map((columnElement) => {
-                      return (
-                        <Table.Th
-                          key={columnElement.id}
-                          w={columnElement.getSize()}
-                          className={
-                            columnElement.column.getCanPin()
-                              ? classes.column_pinned
-                              : undefined
-                          }
-                        >
-                          <Flex align={"center"} gap={10}>
-                            <div
-                              style={{
-                                // cursor: columnElement.column.getCanSort() ? "pointer" : "auto",
-                                width: columnElement.getSize(),
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                              // onClick={columnElement.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(
-                                columnElement.column.columnDef.header,
-                                columnElement.getContext()
-                              )}
-                              {/* <span style={{ 
-                                                    // display:"inline-flex",
-                                                    // marginTop:"5px"
-                                                 }}> */}
-                              {/* {{
-                                                        asc: <IoMdArrowDropup size={20} />,
-                                                        desc: <IoMdArrowDropdown size={20} />,
-                                                    }[columnElement.column.getIsSorted() as string] ?? null} */}
-                              {/* </span> */}
-                            </div>
-                            {columnElement.column.getCanFilter() && filterCell
-                              ? filterCell
-                              : ""}
-                          </Flex>
-                        </Table.Th>
-                      );
-                    })}
-                  </Table.Tr>
-                ))}
-            </Table.Thead>
-            <Table.Tbody>
-              {loading && loading ? (
-                <Table.Tr>
-                  <Table.Td colSpan={table?.getAllLeafColumns().length}>
-                  </Table.Td>
-                </Table.Tr>
-              ) : (
-                table?.getRowModel() &&
-                table?.getRowModel()?.rows.map((rowElement) => (
-                  <Table.Tr key={rowElement.id}>
-                    {rowElement.getVisibleCells().map((cellElement) => {
-                      return (
-                        <Table.Td
-                          key={cellElement.id}
-                          className={
-                            cellElement.column.getCanPin()
-                              ? classes.column_pinned
-                              : undefined
-                          }
-                        >
-                          {flexRender(
-                            cellElement.column.columnDef.cell,
-                            cellElement.getContext()
-                          )}
-                        </Table.Td>
-                      );
-                    })}
-                  </Table.Tr>
-                ))
-              )}
-            </Table.Tbody>
+            <MemoizedHeadTable
+              scrolled={scrolled}
+              table={table}
+              filterCell={filterCell}
+            />
+            <BodyTable loading={loading} table={table} />
           </Table>
         </ScrollArea>
       </Card>
@@ -158,4 +89,138 @@ const CustomTable = <T,>({
   );
 };
 
+const HeadTable = <T,>({ scrolled, table, filterCell }: HeadTableProps<T>) => {
+  console.log("HeadTable");
+  return (
+    <Table.Thead
+      className={cx(classes.header, { [classes.scrolled]: scrolled })}
+    >
+      {table?.getHeaderGroups() &&
+        table?.getHeaderGroups().map((headerElement) => (
+          <Table.Tr key={headerElement.id}>
+            {headerElement.headers.map((columnElement) => {
+              if (columnElement.id == "manual_id") {
+                return (
+                  <Table.Th
+                    key={columnElement.id}
+                    w={columnElement.getSize()}
+                    className={
+                      columnElement.column.getCanPin()
+                        ? classes.column_pinned_left_head
+                        : undefined
+                    }
+                  >
+                    <Flex align={"center"} gap={10}>
+                      <div
+                        style={{
+                          width: columnElement.getSize(),
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {flexRender(
+                          columnElement.column.columnDef.header,
+                          columnElement.getContext()
+                        )}
+                      </div>
+                      {columnElement.column.getCanFilter() && filterCell
+                        ? filterCell
+                        : ""}
+                    </Flex>
+                  </Table.Th>
+                );
+              } else
+                return (
+                  <Table.Th
+                    key={columnElement.id}
+                    w={columnElement.getSize()}
+                    className={
+                      columnElement.column.getCanPin()
+                        ? classes.column_pinned
+                        : undefined
+                    }
+                  >
+                    <Flex align={"center"} gap={10}>
+                      <div
+                        style={{
+                          width: columnElement.getSize(),
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {flexRender(
+                          columnElement.column.columnDef.header,
+                          columnElement.getContext()
+                        )}
+                      </div>
+                      {columnElement.column.getCanFilter() && filterCell
+                        ? filterCell
+                        : ""}
+                    </Flex>
+                  </Table.Th>
+                );
+            })}
+          </Table.Tr>
+        ))}
+    </Table.Thead>
+  );
+};
+
+const BodyTable = <T,>({ loading, table }: BodyTableProps<T>) => {
+  console.log("BodyTable");
+  return (
+    <Table.Tbody>
+      {loading && loading ? (
+        <Table.Tr>
+          <Table.Td colSpan={table?.getAllLeafColumns().length}></Table.Td>
+        </Table.Tr>
+      ) : (
+        table?.getRowModel() &&
+        table?.getRowModel()?.rows.map((rowElement) => (
+          <Table.Tr key={rowElement.id}>
+            {rowElement.getVisibleCells().map((cellElement) => {
+              if (cellElement.id.includes("manual_id")) {
+                return (
+                  <Table.Td
+                    key={cellElement.id}
+                    className={
+                      cellElement.column.getCanPin()
+                        ? classes.column_pinned_left_body
+                        : undefined
+                    }
+                  >
+                    {flexRender(
+                      cellElement.column.columnDef.cell,
+                      cellElement.getContext()
+                    )}
+                  </Table.Td>
+                );
+              } else {
+                return (
+                  <Table.Td
+                    key={cellElement.id}
+                    className={
+                      cellElement.column.getCanPin()
+                        ? classes.column_pinned
+                        : undefined
+                    }
+                  >
+                    {flexRender(
+                      cellElement.column.columnDef.cell,
+                      cellElement.getContext()
+                    )}
+                  </Table.Td>
+                );
+              }
+            })}
+          </Table.Tr>
+        ))
+      )}
+    </Table.Tbody>
+  );
+};
+const MemoizedHeadTable = React.memo(HeadTable) as typeof HeadTable;
+const MemoizedBodyTable = React.memo(BodyTable) as typeof BodyTable;
+
+// const CustomTable = React.memo(CustomTables) as typeof CustomTables;
 export default CustomTable;

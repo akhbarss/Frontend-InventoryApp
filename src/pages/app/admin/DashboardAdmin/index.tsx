@@ -1,4 +1,9 @@
-import { Card, Divider, Grid, Text, useComputedColorScheme } from "@mantine/core";
+import { PageContent } from "@components/ui/atoms";
+import PageLabel from "@components/ui/atoms/PageLabel";
+import { Card, Grid, Skeleton, Text } from "@mantine/core";
+import { useQuery } from "@tanstack/react-query";
+import { itemCount } from "@utils/api/items/index.api";
+import { useAuth } from "@utils/hooks/useAuth";
 import {
   BarChartHorizontalBig,
   ListTodo,
@@ -6,96 +11,88 @@ import {
   ScanLine,
   XCircle,
 } from "lucide-react";
-import { PageContent } from "../../../../components/ui/atoms/PageContent";
-import PageLabel from "../../../../components/ui/atoms/PageLabel";
-import CustomTable from "../../../../components/ui/atoms/Table/CustomTable";
-import {
-  TColDashboardAdmin,
-  columnsDashboardAdmin,
-} from "../../../../utils/columns/dashhboard-admin";
 import classes from "./DashboardAdmin.module.css";
 
 type CardStatisticProps = {
   color: string;
-  amount: number;
   label: string;
+  amount: number;
+  isLoading: boolean;
 };
 
-function CardStatistic({ amount, color, label }: CardStatisticProps) {
+function CardStatistic({
+  amount,
+  color,
+  label,
+  isLoading,
+}: CardStatisticProps) {
   return (
-    <Card className={classes.card_statistic} style={{ borderColor: color }}>
-      <Text fz={24}>{label}</Text>
-      <Text fz={30} fw={"bold"}>
-        {amount}
-      </Text>
-    </Card>
+    <Skeleton visible={isLoading}>
+      <Card className={classes.card_statistic} style={{ borderColor: color }}>
+        <Text fz={24}>{label}</Text>
+        <Text fz={30} fw={"bold"}>
+          {amount}
+        </Text>
+      </Card>
+    </Skeleton>
   );
 }
 
 const DashboardAdmin = () => {
-  console.log("Dashb Admin")
-  // const computedColorScheme = useComputedColorScheme("light");
-  // const light = computedColorScheme == "light";
+  const { user } = useAuth();
+  const major = user.role?.major;
+  const { data, isLoading } = useQuery({
+    queryKey: ["get_item_count", { major }],
+    queryFn: () => itemCount(major!),
+    enabled: major !== null,
+  });
 
   const stats = [
     {
       label: "Total Barang",
-      total: 100,
+      total: data?.payload.countItemByStatus.totalItemCount,
       Icon: BarChartHorizontalBig,
       // color: light ? "#97E0FF" : "#7db7d0",
-      color:  "#97E0FF",
+      color: "#97E0FF",
     },
     {
       label: "Baik",
-      total: 60,
+      total: data?.payload.countItemByStatus.goodItemCount,
       Icon: PackageCheck,
       // color: light ? "#B2FF97" : "#7ce058",
-      color:  "#B2FF97",
+      color: "#B2FF97",
       prefix: "%",
     },
     {
       label: "Rusak Ringan",
-      total: 10,
+      total: data?.payload.countItemByStatus.lightlyDamagedItemCount,
       Icon: ScanLine,
       // color: light ? "#FFE297" : "#d1b66d",
-      color:  "#FFE297",
+      color: "#FFE297",
       prefix: "%",
     },
     {
       label: "Rusak Parah",
-      total: 5,
+      total: data?.payload.countItemByStatus.severelyDamagedItemCount,
       Icon: XCircle,
       color: "#FF97C3",
       prefix: "%",
     },
     {
       label: "Pengajuan",
-      total: 5,
+      total: data?.payload.countItemByStatus.pendingRequestItemCount,
       Icon: ListTodo,
       color: "#8894FF",
       prefix: "",
     },
     {
       label: "Barang Keluar",
-      total: 10,
+      total: data?.payload.countItemByStatus.outItemCount,
       Icon: ListTodo,
       color: "#8894FF",
       prefix: "",
     },
   ];
-
-  const data: TColDashboardAdmin[] = [];
-  // for (let i = 1; i < 10; i++) {
-  //   const ganjil = i % 2 == 1;
-
-  //   data.push({
-  //     id: i,
-  //     nama_barang: "buku" + i,
-  //     jumlah: 1,
-  //     kode_barang: "sdf",
-  //     kondisi: ganjil ? "Baik" : "Kurang",
-  //   });
-  // }
 
   return (
     <>
@@ -105,21 +102,15 @@ const DashboardAdmin = () => {
         <Grid gutter={{ base: 10, sm: 20 }}>
           {stats.map(({ color, label, total }, i) => (
             <Grid.Col span={{ base: 12, xs: 6, sm: 4 }} key={i}>
-              <CardStatistic amount={total} color={color} label={label} />
+              <CardStatistic
+                color={color}
+                label={label}
+                amount={total!}
+                isLoading={isLoading}
+              />
             </Grid.Col>
           ))}
         </Grid>
-        <Text mt={"lg"} fz={24}>
-          Kumpulan barang per status
-        </Text>
-        <CustomTable
-          loading={false}
-          totalData={100}
-          totalPage={10}
-          totalRecords={10}
-          columns={columnsDashboardAdmin()}
-          data={data}
-        />
       </PageContent>
     </>
   );

@@ -1,3 +1,4 @@
+import { ResponseData } from "@utils/types/response.type";
 import axios from "../../axios";
 
 type ResponseGetUsers = {
@@ -24,7 +25,7 @@ type PayloadGetUsers = {
 
 export const getUsers = async (
   payload: PayloadGetUsers
-): Promise<ResponseGetUsers> => {
+): Promise<ResponseData<ResponseGetUsers>> => {
   const { page, take } = payload;
   const response = await axios.get(
     `/user/find-all?order=ASC&page=${page}&take=${take}`
@@ -60,5 +61,16 @@ export const updateUser = async (payload: PayloadUpdateUser): Promise<any> => {
 
 export const deleteUser = async (userId: number): Promise<any> => {
   const response = await axios.delete(`/user/delete-hard?id=${userId}`);
+  return response.data;
+};
+
+export const updatePassword = async (payload: {
+  userId: number;
+  password: string;
+}): Promise<any> => {
+  const { password, userId } = payload;
+  const response = await axios.patch(`/user/update-user?user-id=${userId}`, {
+    password,
+  });
   return response.data;
 };

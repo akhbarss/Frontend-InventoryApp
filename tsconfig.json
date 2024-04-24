@@ -3,8 +3,10 @@
     "baseUrl": ".", // Base URL untuk resolve paths
     "paths": {
       "@components/*": ["./src/components/*"],
+      "@pages/*": ["./src/pages/*"],
       "@utils/*": ["./src/utils/*"],
-      "@store/*": ["./src/store/*"]
+      "@store/*": ["./src/store/*"],
+      "@actions/*": ["./src/actions/*"],
       // Tambahkan alias path lainnya sesuai kebutuhan Anda
     },
     

@@ -1,30 +1,39 @@
-import { Select } from "@mantine/core";
+import { ComboboxItem, Select } from "@mantine/core";
 
-type SelectButtonProps<T> = {
-  width?: number;
+type DataSelect<T> = {
   label: string;
-  data: T[];
-  onChange: (selectedItem: T | null) => void;
+  value: T;
 };
 
-const SelectButton = <T extends string | { label: string; value: string }>({
+type SelectButtonProps<T> = {
+  value: T;
+  data: DataSelect<T>[];
+  label?: string;
+  width?: number;
+  onChange: (selectedItem: ComboboxItem) => void;
+};
+
+const SelectButton = <T extends string >({
   data,
   width,
   label,
+  value,
   onChange,
 }: SelectButtonProps<T>) => {
   return (
     <Select
+      clearable
       width={10}
       checkIconPosition="right"
       style={{ width }}
       data={data.map((item) =>
         typeof item === "string" ? { label: item, value: item } : item
       )}
+      value={value}
       placeholder={label}
-      onChange={(value) => {
+      onChange={(_, obj) => {
         if (onChange) {
-          onChange(value as T);
+          onChange(obj);
         }
       }}
     />

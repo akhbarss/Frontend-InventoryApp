@@ -30,3 +30,15 @@
   position: sticky !important;
   background-color: light-dark(white, var(--mantine-color-dark-6)) !important;
 }
+.column_pinned_left_head {
+  left: 0 !important;
+  position: sticky !important;
+  background-color: light-dark(white, var(--mantine-color-dark-6)) !important;
+  z-index: 100;
+}
+.column_pinned_left_body {
+  left: 0 !important;
+  position: sticky !important;
+  background-color: light-dark(white, var(--mantine-color-dark-6)) !important;
+  z-index: 1;
+}

@@ -1,11 +1,11 @@
-import { Stack } from "@mantine/core"
+import { Stack } from "@mantine/core";
 
 type TPageContent = {
-    children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
 export const PageContent = ({ children }: TPageContent) => (
-    <Stack px={"xl"} gap={"md"} pb={"4rem"}>
-        {children}
-    </Stack>
-)
+  <Stack px={{ base: "xs" }} gap={"md"} pb={"4rem"}>
+    {children}
+  </Stack>
+);

@@ -6,7 +6,7 @@ import {
   useManajemenAdminForm,
 } from "../../../../utils/context/form-context";
 
-const ManajemenAdminPage = () => {
+const ManajemenUser = () => {
   const form = useManajemenAdminForm({
     initialValues: {
       id: null,
@@ -33,4 +33,4 @@ const ManajemenAdminPage = () => {
   );
 };
 
-export default ManajemenAdminPage;
+export default ManajemenUser;
