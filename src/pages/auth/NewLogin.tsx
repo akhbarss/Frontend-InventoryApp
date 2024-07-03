@@ -38,7 +38,7 @@ const NewLogin = () => {
                     />
                     <Mantine.Box >
                         <Mantine.Text c="white" className={classes.text_school}>
-                            Aplikasi <br /> Inventaris <br />Barang Sekolah
+                            Inventaris <br />Barang <br/> Sekolah
                         </Mantine.Text>
                     </Mantine.Box>
                 </Mantine.Flex>

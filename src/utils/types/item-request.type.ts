@@ -13,4 +13,5 @@ export type ItemRequest = {
   status: string;
   total_request: number;
   updated_at: string;
+  request_image: any;
 };

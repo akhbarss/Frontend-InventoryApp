@@ -9,7 +9,7 @@ import { ActionButtonColTable } from "../../components/ui/atoms/Table/ActionButt
 import { createColumnHelpers } from "./columns";
 import { formatDate } from "@utils/format-date";
 import { useModalStore } from "@store/useModalStore";
-import { useFormStore } from "@store/useFormStore";
+import { useFormRequestImage, useFormStore } from "@store/useFormStore";
 import { Badge } from "@mantine/core";
 import { useDetailPermintaanBarang } from "@store/useDetailPermintaanBarang";
 
@@ -17,11 +17,16 @@ export const columnsPermintaanBarangSuperadmin = (): ColumnDef<
   DataRequestItem,
   any
 >[] => {
-  const { setOpenedModalAccept, setOpenedModalReject, setOpenedModalEdit } =
-    useModalStore();
+  const {
+    setOpenedModalAccept,
+    setOpenedModalReject,
+    setOpenedModalEdit,
+    setOpenedModalDetailImage,
+  } = useModalStore();
   const { setAcceptedDate, setArriveDate, setUpdateDate } =
     useDetailPermintaanBarang();
   const { setForm } = useFormStore();
+  const { setFormRequestImage } = useFormRequestImage();
   const col: ColumnDef<DataRequestItem, any>[] = [
     {
       id: "manual_id",
@@ -161,6 +166,25 @@ export const columnsPermintaanBarangSuperadmin = (): ColumnDef<
       enablePinning: false,
     }),
     createColumnHelpers<DataRequestItem>().display({
+      id: "detail",
+      header: "Detail",
+      cell: ({ row: { original } }) => {
+        const { request_image } = original;
+        return (
+          <ActionButtonColTable
+            withDetailimage
+            onClickDetailImage={() => {
+              setFormRequestImage({ request_image: request_image });
+              setOpenedModalDetailImage(true);
+            }}
+          />
+        );
+      },
+      enableColumnFilter: false,
+      enablePinning: true,
+      size: 70,
+    }),
+    createColumnHelpers<DataRequestItem>().display({
       header: "Action",
       id: "action",
       cell: ({ row }) => {
@@ -168,10 +192,11 @@ export const columnsPermintaanBarangSuperadmin = (): ColumnDef<
           status,
           id,
           item_name,
+          request_image,
           accepted_date,
           arrive_date,
           updated_at,
-          on_the_way_date
+          on_the_way_date,
         } = row.original;
 
         const disabledReject = status !== StatusRequestItem.PENDING;
@@ -194,7 +219,7 @@ export const columnsPermintaanBarangSuperadmin = (): ColumnDef<
             disabledSetting={disabledSetting}
             onClickAccept={() => {
               setForm({
-                name: item_name,
+                name: request_image,
                 id,
                 indexStatusPermintaanBarang: null,
               });
@@ -225,10 +250,10 @@ export const columnsPermintaanBarangSuperadmin = (): ColumnDef<
                 indexStatusPermintaanBarang: indexStatus,
               });
               setOpenedModalEdit(true);
-              
+
               setAcceptedDate(accepted_date);
               setArriveDate(arrive_date);
-              setUpdateDate(on_the_way_date);      
+              setUpdateDate(on_the_way_date);
             }}
           />
         );

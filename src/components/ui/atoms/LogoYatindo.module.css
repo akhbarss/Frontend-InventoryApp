@@ -12,3 +12,9 @@
   font-weight: bold;
   font-size: clamp(20px, 4vw, 28px);
 }
+
+.title-box {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}

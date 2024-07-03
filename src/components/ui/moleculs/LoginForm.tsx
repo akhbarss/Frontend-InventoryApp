@@ -55,6 +55,9 @@ const LoginForm = () => {
           if (role == "SUPERADMIN") {
             dispatch(setLoading(false));
             navigate("/superadmin/dashboard");
+          } else if (role == "STORE") {
+            dispatch(setLoading(false));
+            navigate("/store/dashboard");
           } else {
             dispatch(setLoading(false));
             navigate("/dashboard");
@@ -66,7 +69,7 @@ const LoginForm = () => {
           });
         } catch (error) {
           dispatch(setLoading(false));
-          console.log({error})
+          console.log({ error });
         }
       },
       onError: (err: any) => {

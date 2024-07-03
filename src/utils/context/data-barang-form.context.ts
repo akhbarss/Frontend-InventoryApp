@@ -16,6 +16,7 @@ export type DataBarangFormValues = {
   item_type: ItemType;
   total_unit: string;
   item_condition: ItemCondition
+  item_image: any;
 };
 
 export const [

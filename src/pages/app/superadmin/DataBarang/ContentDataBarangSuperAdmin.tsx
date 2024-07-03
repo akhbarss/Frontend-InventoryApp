@@ -4,6 +4,7 @@ import {
   FormDataBarang,
   PageContent,
 } from "@components/ui/atoms";
+import { ModalDetailImage } from "@components/ui/atoms/Modal/DetailImageModal/ModalDetailImage";
 import Paginations from "@components/ui/atoms/Pagination";
 import { SelectButtonQuery } from "@components/ui/atoms/SelectButtonQuery";
 import CustomTable from "@components/ui/atoms/Table/CustomTable";
@@ -29,8 +30,16 @@ const ContentDataBarangSuperAdmin = ({
   categoryItem,
 }: ContentDataBarangSuperAdminProps) => {
   const form = useDataBarangFormContext();
+  const imageUrl = `${import.meta.env.VITE_BACKEND_URL}/uploads/images/${
+    form.values.item_image
+  }`;
   const [major] = useQueryParam("major", StringParam);
-  const { openedModalEdit, setOpenedModalEdit } = useModalStore();
+  const {
+    openedModalEdit,
+    setOpenedModalEdit,
+    openedModalDetailImage,
+    setOpenedModalDetailImage,
+  } = useModalStore();
   const { page, take, setActivePage, setItemPerPage } = usePagination();
 
   const exportMutation = useMutation({
@@ -113,6 +122,13 @@ const ContentDataBarangSuperAdmin = ({
         >
           <FormDataBarang readOnly categoryItem={categoryItem} />
         </BaseModal>
+
+        {/* Modal Detail Image */}
+        <ModalDetailImage
+          opened={openedModalDetailImage}
+          onClose={() => setOpenedModalDetailImage(false)}
+          imageUrl={imageUrl}
+        />
       </PageContent>
     </>
   );

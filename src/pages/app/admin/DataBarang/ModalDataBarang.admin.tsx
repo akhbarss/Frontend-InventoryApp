@@ -1,10 +1,11 @@
 import { BaseModal, FormDataBarang } from "@components/ui/atoms";
+import { ModalDetailImage } from "@components/ui/atoms/Modal/DetailImageModal/ModalDetailImage";
 import { ModalDelete } from "@components/ui/atoms/Modal/ModalDelete/ModalDelete";
 import { useActionBarang } from "@utils/actions/data-barang.action";
 import { useDataBarangFormContext } from "@utils/context/data-barang-form.context";
 import { useModal } from "@utils/hooks/useModal";
 import { CategoryItem } from "@utils/types/items.type";
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 
 type ModalDataBarangProps = {
   categoryItem: CategoryItem;
@@ -12,19 +13,30 @@ type ModalDataBarangProps = {
 
 export const ModalDataBarang = React.memo(
   ({ categoryItem }: ModalDataBarangProps) => {
-    console.log("modal")
+    console.log("modal");
     const form = useDataBarangFormContext();
     const { deleteBarang, editBarang, tambahBarang } = useActionBarang();
     const {
+      openedDetailImage,
       openedEdit,
       openedCreate,
       openedDelete,
       closeModalEdit,
       closeModalCreate,
       closeModalDelete,
+      closeModalDetailImage,
     } = useModal();
 
-    const formDataBarang = useMemo(() => <FormDataBarang categoryItem={categoryItem} />, []);
+    const formDataBarang = useMemo(
+      () => <FormDataBarang categoryItem={categoryItem} />,
+      [categoryItem]
+    );
+
+    const imageUrl = `${import.meta.env.VITE_BACKEND_URL}/uploads/images/${
+      form.values.item_image
+    }`;
+
+    console.log(form.values)
 
     return (
       <>
@@ -51,6 +63,13 @@ export const ModalDataBarang = React.memo(
         >
           {formDataBarang}
         </BaseModal>
+
+        {/* Modal Detail Image */}
+        <ModalDetailImage
+          opened={openedDetailImage}
+          onClose={closeModalDetailImage}
+          imageUrl={imageUrl}
+        />
 
         {/* Modal Delete */}
         <ModalDelete

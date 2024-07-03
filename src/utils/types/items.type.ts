@@ -35,6 +35,7 @@ export type PayloadCreateItem = {
   unit_price: number;
   class_id: number;
   item_type: ItemType;
+  item_image: any;
 };
 export type PayloadUpdateItem = PayloadCreateItem & { id: number };
 

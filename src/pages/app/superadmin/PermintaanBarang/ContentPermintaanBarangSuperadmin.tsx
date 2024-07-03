@@ -1,5 +1,6 @@
 import { PageContent } from "@components/ui/atoms";
 import { BackButton } from "@components/ui/atoms/BackButton/BackButton";
+import { ModalDetailImage } from "@components/ui/atoms/Modal/DetailImageModal/ModalDetailImage";
 import Paginations from "@components/ui/atoms/Pagination";
 import { SelectButtonQuery } from "@components/ui/atoms/SelectButtonQuery";
 import CustomTable from "@components/ui/atoms/Table/CustomTable";
@@ -14,7 +15,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useDetailPermintaanBarang } from "@store/useDetailPermintaanBarang";
-import { useFormStore } from "@store/useFormStore";
+import { useFormRequestImage, useFormStore } from "@store/useFormStore";
 import { useModalStore } from "@store/useModalStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ResponseError } from "@utils/ResponseError";
@@ -28,6 +29,7 @@ import {
   toOnTheWayItemRequest,
 } from "@utils/api/item-request/item-request.api";
 import { columnsPermintaanBarangSuperadmin } from "@utils/columns/permintaan-barang.superadmin.columns";
+// import { usePermintaanBarangFormContext } from "@utils/context/form-context";
 import { formatDate } from "@utils/format-date";
 import usePagination from "@utils/hooks/usePagination";
 import { closeModalProps } from "@utils/modalProps";
@@ -124,15 +126,24 @@ const ContentPermintaanBarangSuperadmin =
       setOpenedModalEdit,
       setOpenedModalReject,
       setOpenedModalAccept,
+      openedModalDetailImage,
+      setOpenedModalDetailImage,
     } = useModalStore();
     const queryClient = useQueryClient();
     const queryName = { major: "major", status: "status" };
     const [major] = useQueryParam(queryName.major, StringParam);
     const [status] = useQueryParam(queryName.status, StringParam);
     const { page, take, setActivePage, setItemPerPage } = usePagination();
+    const { formRequestImage: formData } = useFormRequestImage();
+    const { request_image } = formData;
+    console.log(formData, request_image);
+    const imageUrl = `${
+      import.meta.env.VITE_BACKEND_URL
+    }/uploads/images/${request_image}`;
 
     const { form, setForm } = useFormStore();
     const { name, id, indexStatusPermintaanBarang } = form;
+    console.log(name, id)
     const [active, setActive] = useState(indexStatusPermintaanBarang || 0);
     const [
       openedModalStatusPengirimanToOtw,
@@ -366,6 +377,13 @@ const ContentPermintaanBarangSuperadmin =
           onClose={closeModalStatusPengirimanToArrive}
           description="Anda yakin ihgin mengubah status menjadi Telah ?"
           onAccept={onToArrive}
+        />
+
+        {/* Modal Detail Image */}
+        <ModalDetailImage
+          opened={openedModalDetailImage}
+          onClose={() => setOpenedModalDetailImage(false)}
+          imageUrl={imageUrl}
         />
       </PageContent>
     );

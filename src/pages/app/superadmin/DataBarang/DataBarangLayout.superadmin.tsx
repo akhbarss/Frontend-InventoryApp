@@ -12,6 +12,7 @@ const DataBarangLayoutSuperadmin = () => {
       id: null,
       name: "",
       class_id: null,
+      item_image: null,
       item_code: {
         prefix_code: "",
         value_code: "",
@@ -30,7 +31,7 @@ const DataBarangLayoutSuperadmin = () => {
       //   prefix_code: isNotEmpty(),
       //   value_code: isNotEmpty(),
       // },
-      source_fund: isNotEmpty("Harap isi asal barang."),
+      // source_fund: isNotEmpty("Harap isi asal barang."),
       unit_price: isNotEmpty("Harap isi harga per barang."),
       item_type: isNotEmpty("Harap isi tipe barang."),
       status_item: isNotEmpty("status_item"),

@@ -33,6 +33,7 @@ import DataBarangLayoutSuperadmin from "@pages/app/superadmin/DataBarang/DataBar
 import DataBarangHabisPakaiSuperAdmin from "@pages/app/superadmin/DataBarang/DataBarangHabisPakai.superadmin";
 import DataBarangTidakHabisPakaiSuperAdmin from "@pages/app/superadmin/DataBarang/DataBarangTidakHabisPakai.superadmin";
 import PermintaanBarangSuperAdmin from "@pages/app/superadmin/PermintaanBarang/PermintaanBarangSuperAdmin";
+import DashboardStore from "@pages/app/store/DashboardStore";
 
 // const Login = lazy(() => import("./pages/auth/Login"));
 
@@ -164,11 +165,11 @@ export const routes = createBrowserRouter([
                     path: "tidak-habis-pakai",
                     element: <DataBarangTidakHabisPakaiSuperAdmin />,
                   },
-                ]
+                ],
               },
               {
                 path: "permintaan-barang",
-                element: <PermintaanBarangSuperAdmin />
+                element: <PermintaanBarangSuperAdmin />,
               },
               {
                 path: "manajemen-user",
@@ -178,6 +179,66 @@ export const routes = createBrowserRouter([
               //   path: "barang-dipinjam",
               //   element: <BarangDiPinjam />,
               // },
+            ],
+          },
+          {
+            path: "store",
+            element: (
+              <RolePage roles={["STORE"]}>
+                <Outlet />
+              </RolePage>
+            ),
+            children: [
+              {
+                path: "dashboard",
+                element: <DashboardStore />,
+              },
+              {
+                path: "data-barang",
+                element: <DataBarangLayout />,
+                children: [
+                  {
+                    path: "habis-pakai",
+                    element: <DataBarang_HabisPakai />,
+                  },
+                  {
+                    path: "tidak-habis-pakai",
+                    element: <DataBarang_TidakHabisPakai />,
+                  },
+                ],
+              },
+              {
+                path: "manajemen-barang",
+                element: <ManajemenBarangLayout />,
+                children: [
+                  {
+                    path: "habis-pakai",
+                    element: <ManajemenBarang_HabisPakai />,
+                  },
+                  {
+                    path: "tidak-habis-pakai",
+                    element: <ManajemenBarang_TidakHabisPakai />,
+                  },
+                ],
+              },
+              {
+                path: "permintaan-barang",
+                element: <PermintaanBarangLayout />,
+                children: [
+                  {
+                    path: "atk",
+                    element: <PermintaanBarang_ATK />,
+                  },
+                  {
+                    path: "non-atk",
+                    element: <PermintaanBarang_NonATK />,
+                  },
+                ],
+              },
+              {
+                path: "manajemen-kode",
+                element: <ManajemenKode />,
+              },
             ],
           },
         ],

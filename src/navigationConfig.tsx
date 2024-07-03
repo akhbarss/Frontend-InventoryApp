@@ -55,6 +55,30 @@ export const menusAdmin: TMenusNavigations[] = [
   // getItem("Peminjaman Barang", "/peminjaman-barang", <Repeat2 size={17} />),
 ];
 
+export const menusStore: TMenusNavigations[] = [
+  getItem("Dashboard", "/store/dashboard", <MdOutlineDashboard />),
+  // getItem("Data Barang", "/data-barang", <BarChartHorizontalBig size={16} />),
+  getItem("Data Barang", undefined, <BarChartHorizontalBig size={17} />, [
+    getItem("Habis Pakai", "/store/data-barang/habis-pakai"),
+    getItem("Tidak Habis Pakai", "/store/data-barang/tidak-habis-pakai"),
+  ]),
+  getItem("Manajemen Barang", undefined, <ArrowRightLeft size={17} />, [
+    getItem("Habis Pakai", "/store/manajemen-barang/habis-pakai"),
+    getItem("Tidak Habis Pakai", "/store/manajemen-barang/tidak-habis-pakai"),
+  ]),
+  getItem("Permintaan Barang", undefined, <GitPullRequestArrow size={17} />, [
+    getItem("ATK", "/store/permintaan-barang/atk"),
+    getItem("Non ATK", "/store/permintaan-barang/non-atk"),
+  ]),
+  getItem("Manajemen Kode", "/store/manajemen-kode", <ScrollText size={20} />),
+  // getItem("Manajemen Barang", "/manajemen-barang", ),
+  // getItem("Permintaan Barang", undefined, <FaRoad />, [
+  //     getItem("Belum di Proses", '/permintaan-barang-superadmin/belum-diproses'),
+  //     getItem("Telah di Proses", '/permintaan-barang-superadmin/telah-diproses'),
+  // ]),
+  // getItem("Peminjaman Barang", "/peminjaman-barang", <Repeat2 size={17} />),
+];
+
 export const menusSuperAdmin: TMenusNavigations[] = [
   getItem("Dashboard", "/superadmin/dashboard", <MdOutlineDashboard />),
   getItem(

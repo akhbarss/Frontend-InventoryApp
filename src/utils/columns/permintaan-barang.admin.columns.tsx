@@ -9,10 +9,15 @@ import { useModalStore } from "@store/useModalStore";
 import { useAppSelector } from "@store/store";
 import { Badge, Text, Tooltip } from "@mantine/core";
 import { StatusRequestItem } from "@utils/api/item-request/item-request.api";
+import { setOpenDetailImageModal } from "@store/features/modal.slice";
 
 export const columnsPermintaanBarang = (): ColumnDef<ItemRequest, any>[] => {
   const form = usePermintaanBarangFormContext();
-  const { setOpenedModalDelete, setOpenedModalEdit } = useModalStore();
+  const {
+    setOpenedModalDelete,
+    setOpenedModalEdit,
+    setOpenedModalDetailImage,
+  } = useModalStore();
   const classRoom = useAppSelector((state) => state.class.classes);
 
   return [
@@ -94,11 +99,36 @@ export const columnsPermintaanBarang = (): ColumnDef<ItemRequest, any>[] => {
       ),
     }),
     createColumnHelpers<ItemRequest>().display({
+      id: "detail",
+      header: "Detail",
+      cell: ({ row: { original } }) => {
+        const { request_image } = original;
+        return (
+          <ActionButtonColTable
+            withDetailimage
+            onClickDetailImage={() => {
+              form.setValues({ request_image: request_image });
+              setOpenedModalDetailImage(true);
+            }}
+          />
+        );
+      },
+      enableColumnFilter: false,
+      enablePinning: true,
+      size: 70,
+    }),
+    createColumnHelpers<ItemRequest>().display({
       id: "action",
       header: () => <span>Action</span>,
       cell: ({ row }) => {
-        const { class_id, description, id, item_name, total_request } =
-          row.original;
+        const {
+          class_id,
+          description,
+          id,
+          item_name,
+          total_request,
+          request_image,
+        } = row.original;
         return (
           <ActionButtonColTable
             withDelete
@@ -114,6 +144,7 @@ export const columnsPermintaanBarang = (): ColumnDef<ItemRequest, any>[] => {
                 keterangan: description,
                 lokasi: class_id + "",
                 namaBarang: item_name,
+                request_image: request_image,
               });
               setOpenedModalEdit(true);
             }}

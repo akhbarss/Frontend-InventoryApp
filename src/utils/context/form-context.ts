@@ -37,6 +37,7 @@ interface PermintaanBarangFormValues {
   lokasi: string;
   jumlahBarang: number | null;
   keterangan: string;
+  request_image: any;
 }
 export const [
   PermintaanBarangFormProvider,

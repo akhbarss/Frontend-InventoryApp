@@ -17,8 +17,9 @@ export type DataRequestItem = {
   request_date: string;
   arrive_date: string;
   accepted_date: string;
-  on_the_way_date: string
+  on_the_way_date: string;
   class_id: number;
+  request_image: any;
 };
 
 type ResponseGetAllItemRequest = {
@@ -83,10 +84,19 @@ export type PayloadCreateItemRequest = {
   item_type: string;
   description: string;
   class_id: number;
+  request_image: any;
 };
 
 export const createItemRequest = async (payload: PayloadCreateItemRequest) => {
-  const response = await axios.post("/request-items/create", payload);
+  const response = await axios.post(
+    "/request-items/create-with-file",
+    payload,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return response.data;
 };
 
@@ -95,7 +105,11 @@ export type PayloadUpdateItemRequest = PayloadCreateItemRequest & {
 };
 export const updateItemRequest = async (payload: PayloadUpdateItemRequest) => {
   const { id, ...data } = payload;
-  const response = await axios.patch(`/request-items/update?id=${id}`, data);
+  const response = await axios.patch(`/request-items/update-with-file?id=${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 export const deleteItemRequest = async (id: number) => {

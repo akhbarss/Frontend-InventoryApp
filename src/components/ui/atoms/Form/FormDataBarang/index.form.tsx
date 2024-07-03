@@ -1,8 +1,10 @@
 import {
   Box,
   Group,
+  Image,
   NumberInput,
   Select,
+  SimpleGrid,
   Text,
   TextInput,
 } from "@mantine/core";
@@ -11,12 +13,12 @@ import { useGetClassRoom } from "@utils/hooks/useGetClassRoom";
 import {
   CategoryItem,
   ItemCondition,
-  ItemSource,
   StatusItem,
 } from "@utils/types/items.type";
 import classes from "./FormDataBarang.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@store/store";
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 
 type FormDataBarangProps = {
   readOnly?: boolean;
@@ -24,16 +26,45 @@ type FormDataBarangProps = {
 };
 
 export const FormDataBarang = React.memo(
-  ({ categoryItem,readOnly }: FormDataBarangProps) => {
+  ({ categoryItem, readOnly }: FormDataBarangProps) => {
     const classRoom = useGetClassRoom();
     const allClassRoom = useAppSelector((state) => state.class.classes);
+    const form = useDataBarangFormContext();
+    const [files, setFiles] = useState<FileWithPath[]>([]);
+    const [initialImage, setInitialImage] = useState<string | null>(
+      form.values.item_image || null
+    );
+
+    useEffect(() => {
+      if (files.length > 0) {
+        form.setFieldValue("item_image", files[0]);
+        setInitialImage(null);
+      }
+    }, [files]);
+
+    console.log(form.getInputProps("item_image"));
+
+    const previews = files.map((file, index) => {
+      const imageUrl = URL.createObjectURL(file);
+      return (
+        <Image
+          key={index}
+          src={imageUrl}
+          onLoad={() => URL.revokeObjectURL(imageUrl)}
+        />
+      );
+    });
+
+    const imageSrc = initialImage
+      ? `${import.meta.env.VITE_BACKEND_URL}/uploads/images/${initialImage}`
+      : null;
+
+    console.log(imageSrc);
 
     const formattedAllClassRoom = allClassRoom.map((clas) => ({
       value: clas.id + "",
-      label: clas.class_name
-    }))
-    
-    const form = useDataBarangFormContext();
+      label: clas.class_name,
+    }));
 
     const error = form.errors as unknown as typeof form.values;
     const errPrefixCode = (error as any)["item_code.prefix_code"];
@@ -112,7 +143,7 @@ export const FormDataBarang = React.memo(
         )}
 
         {/* Asal Barang */}
-        <Select
+        {/* <Select
           label="Asal Barang"
           data={Object.values(ItemSource)}
           readOnly={readOnly}
@@ -120,7 +151,7 @@ export const FormDataBarang = React.memo(
           onChange={(val) => {
             return val;
           }}
-        />
+        /> */}
 
         {/* Harga Per Barang */}
         <NumberInput
@@ -185,6 +216,30 @@ export const FormDataBarang = React.memo(
           readOnly={readOnly}
           {...form.getInputProps("status_item")}
         />
+
+        {/* Gambar Barang */}
+        <Dropzone
+          accept={IMAGE_MIME_TYPE}
+          onDrop={setFiles}
+          disabled={readOnly}
+          {...form.getInputProps("item_image")}
+        >
+          <Text ta="center">Gambar Barang</Text>
+        </Dropzone>
+
+        <SimpleGrid
+          cols={files.length > 0 || imageSrc ? 1 : 0}
+          mt={previews.length > 0 || imageSrc ? "xl" : 0}
+        >
+          {imageSrc && (
+            <Image
+              crossOrigin="anonymous"
+              src={imageSrc}
+              alt="Initial preview"
+            />
+          )}
+          {previews}
+        </SimpleGrid>
       </>
     );
   }

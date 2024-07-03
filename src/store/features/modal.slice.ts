@@ -4,6 +4,7 @@ interface TModalSlice {
   openedCreateModal: boolean;
   openedEditModal: boolean;
   openedDeleteModal: boolean;
+  openedDetailImageModal: boolean;
   data_id: number | null;
 }
 
@@ -11,6 +12,7 @@ const initialState: TModalSlice = {
   openedCreateModal: false,
   openedEditModal: false,
   openedDeleteModal: false,
+  openedDetailImageModal: false,
   data_id: null,
 };
 
@@ -27,9 +29,12 @@ export const ModalSlice = createSlice({
     setOpenDeleteModal: (state, action: PayloadAction<boolean>) => {
       state.openedDeleteModal = action.payload;
     },
+    setOpenDetailImageModal: (state, action: PayloadAction<boolean>) => {
+      state.openedDetailImageModal = action.payload;
+    },
   },
 });
 
 export default ModalSlice.reducer;
-export const { setOpenEditModal, setOpenDeleteModal, setOpenCreateModal } =
+export const { setOpenEditModal, setOpenDeleteModal, setOpenCreateModal, setOpenDetailImageModal } =
   ModalSlice.actions;

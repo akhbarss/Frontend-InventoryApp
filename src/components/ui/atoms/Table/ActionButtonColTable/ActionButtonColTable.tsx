@@ -1,5 +1,5 @@
 import { ActionIcon, Box, Group } from "@mantine/core";
-import { Check, Info, Settings, Trash2, X } from "lucide-react";
+import { Check, Image, Info, Settings, Trash2, X } from "lucide-react";
 
 interface ActionButtonColTableProps {
   withSetting?: boolean;
@@ -7,12 +7,15 @@ interface ActionButtonColTableProps {
   withReject?: boolean;
   withAccept?: boolean;
   withDetail?: boolean;
+  withDetailimage?: boolean;
   disabledSetting?: boolean;
+  disabledDetailImage?: boolean;
   disabledDelete?: boolean;
   disabledReject?: boolean;
   disabledAccept?: boolean;
   disabledDetail?: boolean;
   onClickSetting?: () => void;
+  onClickDetailImage?: () => void;
   onClickDelete?: () => void;
   onClickReject?: () => void;
   onClickAccept?: () => void;
@@ -25,12 +28,15 @@ export const ActionButtonColTable = ({
   withReject,
   withAccept,
   withDetail,
+  withDetailimage,
+  disabledDetailImage,
   disabledReject,
   disabledAccept,
   disabledSetting,
   disabledDelete,
   disabledDetail,
   onClickDetail,
+  onClickDetailImage,
   onClickSetting,
   onClickDelete,
   onClickReject,
@@ -48,6 +54,16 @@ export const ActionButtonColTable = ({
               onClick={onClickReject}
             >
               <X size={20} />
+            </ActionIcon>
+          )}
+          {withDetailimage && (
+            <ActionIcon
+              disabled={disabledDetailImage}
+              variant="outline"
+              color="green"
+              onClick={onClickDetailImage}
+            >
+              <Image size={20} />
             </ActionIcon>
           )}
           {withAccept && (

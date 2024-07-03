@@ -28,6 +28,7 @@ export type Item = {
   total_unit_price: null;
   total_unit: string;
   category_item: string;
+  item_image: any;
   class_id: number;
   total_current_item: number;
   item_type: ItemType;
@@ -85,14 +86,22 @@ export const getBasicInfoItems = async (
 export const createItem = async (
   payload: PayloadCreateItem
 ): Promise<ResponseData<ResponseCreateItem>> => {
-  const response = await axios.post("/items/create", payload);
+  const response = await axios.post("/items/create-item-with-file", payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 export const updateItem = async (
   payload: PayloadUpdateItem
 ): Promise<ResponseData<ResponseUpdateItem>> => {
   const { id, ...data } = payload;
-  const response = await axios.put(`/items/update?id=${id}`, data);
+  const response = await axios.patch(`/items/update-with-file?id=${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 

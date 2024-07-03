@@ -8,7 +8,11 @@ import { ChevronRight, Circle, LogOut } from "lucide-react";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LOGO_YATINDO } from "../../../../assets/image/Logo_Yatindo_IMAGE";
-import { menusAdmin, menusSuperAdmin } from "../../../../navigationConfig";
+import {
+  menusAdmin,
+  menusStore,
+  menusSuperAdmin,
+} from "../../../../navigationConfig";
 import { nullifyObject } from "../../../../utils/actions/nullifyObject";
 import { logout } from "../../../../utils/api/auth";
 import { useAuth } from "../../../../utils/hooks/useAuth";
@@ -38,17 +42,19 @@ const Navbar = React.memo(({ toggle, opened }: TNavbar) => {
     queryKey: ["get_all_role"],
     queryFn: getAllRole,
   });
-  const rolesAdmin = data?.payload.findAllRoles
-    .map((role) => role.name)
-    .filter((role) => role !== "SUPERADMIN");
-    
+  const roles = data?.payload.findAllRoles.map((role) => role.name);
   const role = user?.role?.name;
 
-  const menus = rolesAdmin?.includes(role!)
-    ? menusAdmin
-    : role === "SUPERADMIN"
-    ? menusSuperAdmin
-    : [];
+  console.log(role);
+
+  const menus =
+    role === "SUPERADMIN"
+      ? menusSuperAdmin
+      : role === "STORE"
+      ? menusStore
+      : roles?.includes(role!)
+      ? menusAdmin
+      : [];
 
   const [openedDrawer, { open: openDrawer, close: closeDrawer }] =
     useDisclosure(false);

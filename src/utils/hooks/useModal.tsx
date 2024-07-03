@@ -1,6 +1,7 @@
 import {
   setOpenCreateModal,
   setOpenDeleteModal,
+  setOpenDetailImageModal,
   setOpenEditModal,
 } from "@store/features/modal.slice";
 import { useAppSelector } from "@store/store";
@@ -9,7 +10,7 @@ import { useDispatch } from "react-redux";
 
 export const useModal = () => {
   const dispatch = useDispatch();
-  const { openedCreateModal, openedEditModal, openedDeleteModal } =
+  const { openedCreateModal, openedEditModal, openedDeleteModal, openedDetailImageModal, } =
     useAppSelector((state) => state.modal);
 
   const openModalCreate = useCallback(
@@ -36,9 +37,18 @@ export const useModal = () => {
     () => dispatch(setOpenDeleteModal(false)),
     [dispatch]
   );
+  const openModalDetailImage = useCallback(
+    () => dispatch(setOpenDetailImageModal(true)),
+    [dispatch]
+  );
+  const closeModalDetailImage = useCallback(
+    () => dispatch(setOpenDetailImageModal(false)),
+    [dispatch]
+  );
 
   return useMemo(
     () => ({
+      openedDetailImage: openedDetailImageModal,
       openedCreate: openedCreateModal,
       openedEdit: openedEditModal,
       openedDelete: openedDeleteModal,
@@ -48,8 +58,11 @@ export const useModal = () => {
       closeModalEdit,
       openModalDelete,
       closeModalDelete,
+      openModalDetailImage,
+      closeModalDetailImage,
     }),
     [
+      openedDetailImageModal,
       openedCreateModal,
       openedEditModal,
       openedDeleteModal,
@@ -59,6 +72,8 @@ export const useModal = () => {
       closeModalEdit,
       openModalDelete,
       closeModalDelete,
+      openModalDetailImage,
+      closeModalDetailImage,
     ]
   );
 };

@@ -19,9 +19,14 @@
     padding: 2rem;
   }
 }
+.login-right-side {
+  @media (min-width: $mantine-breakpoint-sm) {
+    flex: 2;
+  }
+}
 
 .right-side {
-  flex: 2;
+  flex: 3;
   background-size: cover;
   background-position: center;
   min-height: 100vh;

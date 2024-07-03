@@ -13,8 +13,11 @@ const LogoYatindo = () => {
       />
       <Mantine.Box>
         <Mantine.Text className={classes["title-app"]}>
-          Aplikasi <br /> Inventaris <br />
-          Barang Sekolah
+          Inventaris
+          <br />
+          Barang
+          <br />
+          Sekolah
         </Mantine.Text>
       </Mantine.Box>
     </Mantine.Flex>

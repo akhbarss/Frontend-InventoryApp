@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown } from "lucide-react";
 import {
   setOpenDeleteModal,
+  setOpenDetailImageModal,
   setOpenEditModal,
 } from "../../store/features/modal.slice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -38,7 +39,7 @@ export const columnsDataBarangAdmin = (
     createColumnHelpers<Item>().display({
       id: "manual_id",
       cell: ({ row: { index } }) => index + 1,
-      header: "Id"
+      header: "Id",
     }),
     // createColumnHelpers<Item>().accessor("id", {
     //   id: "Id",
@@ -160,17 +161,24 @@ export const columnsDataBarangAdmin = (
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<Item>().accessor("source_fund", {
-      id: "Asal",
-      header: ({ column }) => (
-        <ButtonHeaderColumn
-          label="Asal"
-          column={column}
-          Icon={<ChevronsUpDown size={15} />}
-        />
-      ),
+    createColumnHelpers<Item>().display({
+      id: "detail",
+      header: "Detail",
+      cell: ({ row: { original } }) => {
+        const { item_image } = original;
+        return (
+          <ActionButtonColTable
+            withDetailimage
+            onClickDetailImage={() => {
+              dispatch(setOpenDetailImageModal(true));
+              form.setValues({ item_image: item_image });
+            }}
+          />
+        );
+      },
       enableColumnFilter: false,
-      enablePinning: false,
+      enablePinning: true,
+      size: 70,
     }),
     createColumnHelpers<Item>().display({
       id: "action",
@@ -214,14 +222,14 @@ export const columnsDataBarangAdmin = (
 export const columnsDataBarangSuperAdmin = (
   categoryItem: CategoryItem
 ): ColumnDef<any, any>[] => {
-  const { setOpenedModalEdit } = useModalStore();
+  const { setOpenedModalEdit, setOpenedModalDetailImage } = useModalStore();
   const form = useDataBarangFormContext();
   const classRoom = useAppSelector((state) => state.class.classes);
   return [
     createColumnHelpers<Item>().display({
       id: "manual_id",
       cell: ({ row: { index } }) => index + 1,
-      header: "Id"
+      header: "Id",
     }),
     createColumnHelpers<Item>().accessor("name", {
       id: "Nama Barang",
@@ -318,17 +326,24 @@ export const columnsDataBarangSuperAdmin = (
       enableColumnFilter: false,
       enablePinning: false,
     }),
-    createColumnHelpers<Item>().accessor("source_fund", {
-      id: "Asal",
-      header: ({ column }) => (
-        <ButtonHeaderColumn
-          label="Asal"
-          column={column}
-          Icon={<ChevronsUpDown size={15} />}
-        />
-      ),
+    createColumnHelpers<Item>().display({
+      id: "detail",
+      header: "Detail",
+      cell: ({ row: { original } }) => {
+        const { item_image } = original;
+        return (
+          <ActionButtonColTable
+            withDetailimage
+            onClickDetailImage={() => {
+              setOpenedModalDetailImage(true);
+              form.setValues({ item_image: item_image });
+            }}
+          />
+        );
+      },
       enableColumnFilter: false,
-      enablePinning: false,
+      enablePinning: true,
+      size: 70,
     }),
     createColumnHelpers<Item>().display({
       id: "action",

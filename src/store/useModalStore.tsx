@@ -3,6 +3,8 @@
     interface ModalStateZustand {
       openedModalCreate: boolean;
       setOpenedModalCreate: (value: boolean) => void;
+      openedModalDetailImage: boolean;
+      setOpenedModalDetailImage: (value: boolean) => void;
       openedModalEdit: boolean;
       setOpenedModalEdit: (value: boolean) => void;
       openedModalDelete: boolean;
@@ -16,6 +18,8 @@
     export const useModalStore = create<ModalStateZustand>()((set) => ({
       openedModalCreate: false,
       setOpenedModalCreate: (openedModalCreate) => set({ openedModalCreate }),
+      openedModalDetailImage: false,
+      setOpenedModalDetailImage: (openedModalDetailImage) => set({ openedModalDetailImage }),
       openedModalEdit: false,
       setOpenedModalEdit: (openedModalEdit) => set({ openedModalEdit }),
       openedModalDelete: false,

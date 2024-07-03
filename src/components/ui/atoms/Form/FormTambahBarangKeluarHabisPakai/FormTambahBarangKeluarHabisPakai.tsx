@@ -46,7 +46,6 @@ export const FormTambahBarangKeluarHabisPakai = React.memo(
     });
 
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
     const datas = data?.payload?.findManyItemsWithNoPagination || [];
     const dataItems: ComboboxData = useMemo(
       () =>
