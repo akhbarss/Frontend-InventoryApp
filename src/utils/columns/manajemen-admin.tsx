@@ -32,6 +32,8 @@ export const columnsManajemenAdmin = (): ColumnDef<TManajemenAdmin, any>[] => {
         return ROLE.ADMIN_TO;
       case 4:
         return ROLE.ADMIN_TE;
+      case 5:
+        return ROLE.STORE;
       default:
         return "SUPER ADMIN";
     }
@@ -51,18 +53,6 @@ export const columnsManajemenAdmin = (): ColumnDef<TManajemenAdmin, any>[] => {
       size: 90,
       enablePinning: false,
     },
-    createColumnHelpers<TManajemenAdmin>().accessor("id", {
-      id: "user_id",
-      header: ({ column }) => (
-        <ButtonHeaderColumn
-          label="User Id"
-          column={column}
-          Icon={<ChevronsUpDown size={15} />}
-        />
-      ),
-      size: 90,
-      enablePinning: false,
-    }),
     createColumnHelpers<TManajemenAdmin>().accessor("name", {
       id: "name",
       header: ({ column }) => (

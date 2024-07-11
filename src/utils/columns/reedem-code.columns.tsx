@@ -34,18 +34,6 @@ export const columnReedemCode = ({
       size: 90,
       enablePinning: true,
     },
-    createColumnHelpers<ReedemCode>().accessor("id", {
-      id: "id",
-      header: ({ column }) => (
-        <ButtonHeaderColumn
-          label="ID"
-          column={column}
-          Icon={<ChevronsUpDown size={15} />}
-        />
-      ),
-      enableColumnFilter: false,
-      enablePinning: false,
-    }),
     createColumnHelpers<ReedemCode>().accessor("redeem_code", {
       id: "redeem_code",
       header: ({ column }) => (
